@@ -29,7 +29,7 @@
         }
         
         .stat-label { font-size: 0.9rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-val { display: block; font-size: 2.5rem; font-weight: bold; color: #e53935; }
+        .stat-val { display: block; font-size: 2.5rem; font-weight: bold; color: #000000; } /* Changed to Black */
 
         .play-area { margin-bottom: 30px; text-align: center; }
         #play-btn { 
@@ -101,7 +101,7 @@
     </div>
 
     <div class="play-area">
-        <button id="play-btn" onclick="playRandomChord()">Listen to Chord</button>
+        <button id="play-btn" onclick="handlePlayButton()">Listen to Chord</button>
         <div id="msg"></div>
     </div>
 
@@ -167,16 +167,22 @@
             });
         }
 
-        function playRandomChord() {
-            const available = progression.slice(0, activeCount);
-            currentTarget = available[Math.floor(Math.random() * available.length)];
+        // Modified logic: Replay the current target if it exists, otherwise pick new
+        function handlePlayButton() {
+            if (!currentTarget) {
+                const available = progression.slice(0, activeCount);
+                currentTarget = available[Math.floor(Math.random() * available.length)];
+            }
             playSound(chords[currentTarget]);
             document.getElementById('msg').innerText = "Listen...";
             document.getElementById('msg').style.color = "#333";
         }
 
         function checkAnswer(choice) {
-            if (!currentTarget) return;
+            if (!currentTarget) {
+                document.getElementById('msg').innerText = "Press 'Listen' first!";
+                return;
+            }
 
             if (choice === currentTarget) {
                 streak++;
@@ -189,16 +195,19 @@
                     alert("Well done! A new chord has been unlocked.");
                 }
                 
-                currentTarget = null;
+                // CRITICAL: We clear the target here so the next button press picks a NEW chord
+                currentTarget = null; 
                 updateUI();
-                setTimeout(playRandomChord, 1200);
+                
+                // Auto-play the next one after a short delay
+                setTimeout(handlePlayButton, 1200);
             } else {
-                // Mistake: Reset streak to zero
                 streak = 0;
                 document.getElementById('msg').innerText = "Incorrect. Streak reset! ❌";
                 document.getElementById('msg').style.color = "red";
                 updateUI();
-                // Play correct sound so they can hear the difference
+                // Play correct sound for feedback, but don't clear currentTarget 
+                // so user can keep trying the same one if they wish.
                 playSound(chords[currentTarget]); 
             }
         }
