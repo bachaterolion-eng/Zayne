@@ -1,4 +1,3 @@
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -17,12 +16,33 @@
         }
 
         .header { text-align: center; margin-bottom: 20px; }
-        .stats { background: #fff; padding: 15px; border-radius: 12px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); margin-bottom: 20px; width: 100%; max-width: 400px; display: flex; justify-content: space-around; }
-        .stat-box { text-align: center; }
-        .stat-val { display: block; font-size: 1.5rem; font-weight: bold; color: #007bff; }
+        
+        .stats { 
+            background: #fff; 
+            padding: 15px; 
+            border-radius: 12px; 
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); 
+            margin-bottom: 20px; 
+            width: 100%; 
+            max-width: 300px; 
+            text-align: center;
+        }
+        
+        .stat-label { font-size: 0.9rem; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+        .stat-val { display: block; font-size: 2.5rem; font-weight: bold; color: #e53935; }
 
         .play-area { margin-bottom: 30px; text-align: center; }
-        #play-btn { background: #007bff; color: white; border: none; padding: 20px 40px; border-radius: 50px; font-size: 1.2rem; cursor: pointer; box-shadow: 0 4px 15px rgba(0,123,255,0.3); }
+        #play-btn { 
+            background: #333; 
+            color: white; 
+            border: none; 
+            padding: 20px 40px; 
+            border-radius: 50px; 
+            font-size: 1.2rem; 
+            cursor: pointer; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2); 
+            transition: background 0.2s;
+        }
         #play-btn:active { transform: scale(0.98); }
 
         .grid {
@@ -35,7 +55,7 @@
 
         .chord-btn {
             border: none;
-            height: 80px;
+            height: 90px;
             color: white;
             font-weight: bold;
             cursor: pointer;
@@ -43,13 +63,15 @@
             transition: all 0.2s;
             opacity: 1;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
+            font-size: 1rem;
+            box-shadow: 0 4px 0px rgba(0,0,0,0.1);
         }
 
-        .chord-btn.locked { opacity: 0.1; cursor: not-allowed; pointer-events: none; }
-        .chord-btn:active:not(.locked) { transform: translateY(3px); }
+        .chord-btn.locked { opacity: 0.05; cursor: not-allowed; pointer-events: none; }
+        .chord-btn:active:not(.locked) { transform: translateY(3px); box-shadow: none; }
 
         /* Custom Colors */
         .red { background-color: #e53935; }
@@ -62,19 +84,20 @@
         .teal { background-color: #008080; }
         .grey { background-color: #9e9e9e; }
 
-        #msg { margin-top: 20px; font-weight: bold; height: 20px; }
+        #msg { margin-top: 20px; font-weight: bold; height: 24px; font-size: 1.1rem; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>Eguchi Training</h1>
+        <h1>Eguchi Pitch Training</h1>
         <p id="level-text">Level 1: 2 Chords Active</p>
     </div>
 
     <div class="stats">
-        <div class="stat-box">Score<span id="score" class="stat-val">0</span></div>
-        <div class="stat-box">Correct<span id="streak" class="stat-val">0</span></div>
+        <span class="stat-label">Consecutive Correct</span>
+        <span id="streak" class="stat-val">0</span>
+        <small style="color: #999;">Get 20 to unlock next chord</small>
     </div>
 
     <div class="play-area">
@@ -110,13 +133,11 @@
         const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey'];
         
         let activeCount = 2;
-        let score = 0;
         let streak = 0;
         let currentTarget = null;
         let audioCtx = null;
 
         function updateUI() {
-            document.getElementById('score').innerText = score;
             document.getElementById('streak').innerText = streak;
             document.getElementById('level-text').innerText = `Level ${activeCount - 1}: ${activeCount} Chords Active`;
             
@@ -138,11 +159,11 @@
                 osc.frequency.setValueAtTime(freq, now);
                 gain.gain.setValueAtTime(0, now);
                 gain.gain.linearRampToValueAtTime(0.1, now + 0.02);
-                gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.5);
+                gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
                 osc.connect(gain);
                 gain.connect(audioCtx.destination);
                 osc.start(now);
-                osc.stop(now + 1.6);
+                osc.stop(now + 2.0);
             });
         }
 
@@ -150,7 +171,7 @@
             const available = progression.slice(0, activeCount);
             currentTarget = available[Math.floor(Math.random() * available.length)];
             playSound(chords[currentTarget]);
-            document.getElementById('msg').innerText = "Which chord was that?";
+            document.getElementById('msg').innerText = "Listen...";
             document.getElementById('msg').style.color = "#333";
         }
 
@@ -158,27 +179,27 @@
             if (!currentTarget) return;
 
             if (choice === currentTarget) {
-                score++;
                 streak++;
                 document.getElementById('msg').innerText = "Correct! ✨";
                 document.getElementById('msg').style.color = "green";
                 
-                // Progress Logic: Every 15 correct in a row, add a chord
-                if (streak >= 15 && activeCount < progression.length) {
+                if (streak >= 20 && activeCount < progression.length) {
                     activeCount++;
-                    streak = 0; // Reset streak for the next level
-                    alert("Level Up! A new chord has been added.");
+                    streak = 0; 
+                    alert("Well done! A new chord has been unlocked.");
                 }
                 
                 currentTarget = null;
                 updateUI();
-                setTimeout(playRandomChord, 1000);
+                setTimeout(playRandomChord, 1200);
             } else {
+                // Mistake: Reset streak to zero
                 streak = 0;
-                document.getElementById('msg').innerText = "Try again! ❌";
+                document.getElementById('msg').innerText = "Incorrect. Streak reset! ❌";
                 document.getElementById('msg').style.color = "red";
                 updateUI();
-                playSound(chords[currentTarget]); // Replay for correction
+                // Play correct sound so they can hear the difference
+                playSound(chords[currentTarget]); 
             }
         }
 
