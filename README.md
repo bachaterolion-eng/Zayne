@@ -2,11 +2,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pitch Training</title>
+    <title>Piano Pitch Training</title>
     <style>
         :root {
             --bg-color: #f0f2f5;
-            --card-bg: #ffffff;
             --text-main: #2d3436;
             --text-sub: #636e72;
         }
@@ -32,36 +31,11 @@
             text-align: center;
         }
 
-        h1 {
-            font-weight: 300;
-            font-size: 1.8rem;
-            margin-bottom: 10px;
-            letter-spacing: 1px;
-        }
+        .stats { margin-bottom: 30px; }
+        .stat-val { display: block; font-size: 3.5rem; font-weight: 700; color: #000000; line-height: 1; }
+        .stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-sub); }
 
-        .stats {
-            margin-bottom: 30px;
-        }
-
-        .stat-val {
-            display: block;
-            font-size: 3.5rem;
-            font-weight: 700;
-            color: #000000;
-            line-height: 1;
-        }
-
-        .stat-label {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            color: var(--text-sub);
-        }
-
-        .play-area {
-            margin-bottom: 40px;
-        }
-
+        .play-area { margin-bottom: 40px; }
         #play-btn {
             background: #2d3436;
             color: white;
@@ -75,16 +49,6 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        #play-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 15px 25px rgba(0,0,0,0.15);
-        }
-
-        #play-btn:active {
-            transform: translateY(0);
-        }
-
-        /* 3-Column Grid */
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
@@ -101,23 +65,13 @@
             box-shadow: 0 4px 6px rgba(0,0,0,0.05);
         }
 
-        .chord-btn:hover:not(.locked) {
-            transform: scale(1.05);
-            filter: brightness(1.1);
-        }
-
-        .chord-btn:active:not(.locked) {
-            transform: scale(0.95);
-        }
-
         .chord-btn.locked {
             background-color: #dfe6e9 !important;
-            opacity: 0.3;
+            opacity: 0.15;
             cursor: not-allowed;
-            box-shadow: none;
         }
 
-        /* Colors */
+        /* Color Palette from Gemini_Generated_Image_mzqbjcmzqbjcmzqb.png */
         .red { background-color: #ff5252; }
         .brown { background-color: #8d6e63; }
         .pink { background-color: #f48fb1; }
@@ -128,23 +82,12 @@
         .teal { background-color: #4db6ac; }
         .grey { background-color: #b0bec5; }
 
-        #msg {
-            margin-top: 25px;
-            font-size: 1rem;
-            min-height: 1.5rem;
-            font-weight: 500;
-        }
-
-        @media (max-width: 400px) {
-            .grid { gap: 10px; }
-        }
+        #msg { margin-top: 25px; font-size: 1rem; font-weight: 500; height: 1.5rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <h1>Pitch Training</h1>
-        
         <div class="stats">
             <span id="streak" class="stat-val">0</span>
             <span class="stat-label">Consecutive</span>
@@ -152,7 +95,7 @@
 
         <div class="play-area">
             <button id="play-btn" onclick="handlePlayButton()">Listen</button>
-            <div id="msg"></div>
+            <div id="msg">Loading .wav files...</div>
         </div>
 
         <div class="grid">
@@ -169,51 +112,38 @@
     </div>
 
     <script>
-        const chords = {
-            'red':    [261.63, 329.63, 392.00],
-            'brown':  [261.63, 349.23, 440.00],
-            'pink':   [246.94, 293.66, 392.00],
-            'purple': [220.00, 261.63, 349.23],
-            'orange': [293.66, 392.00, 493.88],
-            'yellow': [329.63, 392.00, 523.25],
-            'green':  [349.23, 440.00, 523.25],
-            'teal':   [392.00, 493.88, 587.33],
-            'grey':   [392.00, 523.25, 659.25]
-        };
-
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const soundBuffers = {};
         const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey'];
         
         let activeCount = 2;
         let streak = 0;
         let currentTarget = null;
-        let audioCtx = null;
 
-        function updateUI() {
-            document.getElementById('streak').innerText = streak;
-            progression.forEach((color, index) => {
-                const btn = document.getElementById(`btn-${color}`);
-                if (btn && index < activeCount) btn.classList.remove('locked');
-            });
+        // Fetching .wav files from the same directory as index.html
+        async function loadSound(name) {
+            try {
+                const response = await fetch(`${name}.wav`); 
+                const arrayBuffer = await response.arrayBuffer();
+                soundBuffers[name] = await audioCtx.decodeAudioData(arrayBuffer);
+            } catch (e) {
+                console.error(`Missing file: ${name}.wav`, e);
+            }
         }
 
-        function playSound(frequencies) {
-            if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-            if (audioCtx.state === 'suspended') audioCtx.resume();
+        // Initialize App
+        Promise.all(progression.map(name => loadSound(name))).then(() => {
+            document.getElementById('msg').innerText = "Ready";
+        });
 
-            const now = audioCtx.currentTime;
-            frequencies.forEach(freq => {
-                const osc = audioCtx.createOscillator();
-                const gain = audioCtx.createGain();
-                osc.type = 'triangle';
-                osc.frequency.setValueAtTime(freq, now);
-                gain.gain.setValueAtTime(0, now);
-                gain.gain.linearRampToValueAtTime(0.1, now + 0.02);
-                gain.gain.exponentialRampToValueAtTime(0.0001, now + 1.8);
-                osc.connect(gain);
-                gain.connect(audioCtx.destination);
-                osc.start(now);
-                osc.stop(now + 2.0);
-            });
+        function playSound(name) {
+            if (audioCtx.state === 'suspended') audioCtx.resume();
+            if (!soundBuffers[name]) return;
+
+            const source = audioCtx.createBufferSource();
+            source.buffer = soundBuffers[name];
+            source.connect(audioCtx.destination);
+            source.start(0);
         }
 
         function handlePlayButton() {
@@ -221,7 +151,7 @@
                 const available = progression.slice(0, activeCount);
                 currentTarget = available[Math.floor(Math.random() * available.length)];
             }
-            playSound(chords[currentTarget]);
+            playSound(currentTarget);
             document.getElementById('msg').innerText = "Focus...";
             document.getElementById('msg').style.color = "#636e72";
         }
@@ -236,11 +166,11 @@
                 
                 if (streak >= 20 && activeCount < progression.length) {
                     activeCount++;
-                    streak = 0; 
-                    alert("Next level unlocked.");
+                    streak = 0;
+                    alert("Next color unlocked!");
                 }
                 
-                currentTarget = null; 
+                currentTarget = null;
                 updateUI();
                 setTimeout(handlePlayButton, 1000);
             } else {
@@ -248,11 +178,17 @@
                 document.getElementById('msg').innerText = "Reset";
                 document.getElementById('msg').style.color = "#e74c3c";
                 updateUI();
-                playSound(chords[currentTarget]); 
+                playSound(currentTarget); // Replay target so they learn the mistake
             }
         }
 
-        updateUI();
+        function updateUI() {
+            document.getElementById('streak').innerText = streak;
+            progression.forEach((color, index) => {
+                const btn = document.getElementById(`btn-${color}`);
+                if (btn && index < activeCount) btn.classList.remove('locked');
+            });
+        }
     </script>
 </body>
 </html>
