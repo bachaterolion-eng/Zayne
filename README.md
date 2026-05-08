@@ -26,7 +26,7 @@
         .container {
             width: 100%;
             max-width: 650px;
-            padding: 10px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -37,7 +37,6 @@
         .stat-val { display: block; font-size: 4.5rem; font-weight: 700; color: #000000; line-height: 1; }
         .stat-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-sub); }
 
-        /* Progress Bar Container */
         .progress-container {
             width: 100%;
             max-width: 500px;
@@ -49,7 +48,6 @@
             box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
 
-        /* The moving part of the Progress Bar */
         .progress-bar {
             height: 100%;
             width: 0%;
@@ -158,19 +156,18 @@
         let activeCount = 2;
         let streak = 0;
         let currentTarget = null;
+        const streakGoal = 10; // Updated goal to 10
 
-        // Load the .wav files from the root directory
         async function loadSound(name) {
             try {
                 const response = await fetch(`${name}.wav`); 
                 const arrayBuffer = await response.arrayBuffer();
                 soundBuffers[name] = await audioCtx.decodeAudioData(arrayBuffer);
             } catch (e) {
-                console.error(`Error: Could not find ${name}.wav in the folder.`, e);
+                console.error(`Error: Could not find ${name}.wav`, e);
             }
         }
 
-        // Initialize audio on start
         Promise.all(progression.map(name => loadSound(name))).then(() => {
             document.getElementById('msg').innerText = "Ready";
         });
@@ -202,7 +199,7 @@
                 document.getElementById('msg').innerText = "Correct! ✨";
                 document.getElementById('msg').style.color = "#2ecc71";
                 
-                if (streak >= 20 && activeCount < progression.length) {
+                if (streak >= streakGoal && activeCount < progression.length) {
                     activeCount++;
                     streak = 0;
                     alert("Well done! Next level unlocked.");
@@ -216,19 +213,15 @@
                 document.getElementById('msg').innerText = "Incorrect. Try again!";
                 document.getElementById('msg').style.color = "#e74c3c";
                 updateUI();
-                playSound(currentTarget); // Replay the correct sound for reference
+                playSound(currentTarget); 
             }
         }
 
         function updateUI() {
-            // Update the Black streak number
             document.getElementById('streak').innerText = streak;
-
-            // Fill the progress bar (calculated toward 20)
-            const progressPercent = (streak / 20) * 100;
+            const progressPercent = (streak / streakGoal) * 100;
             document.getElementById('progress-bar').style.width = `${progressPercent}%`;
 
-            // Update button visibility based on level
             progression.forEach((color, index) => {
                 const btn = document.getElementById(`btn-${color}`);
                 if (btn && index < activeCount) btn.classList.remove('locked');
