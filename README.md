@@ -10,6 +10,7 @@
             --text-sub: #636e72;
             --progress-bg: #dfe6e9;
             --progress-fill: #2ecc71;
+            --silhouette-border: #b2bec3;
         }
 
         body {
@@ -90,12 +91,34 @@
         .chord-btn {
             width: 120px;
             height: 120px;
-            border: none;
+            border: 2px solid transparent;
             border-radius: 20px; 
             cursor: pointer;
-            transition: transform 0.1s;
+            transition: transform 0.1s, background-color 0.3s, border 0.3s;
             box-shadow: 0 6px 12px rgba(0,0,0,0.08);
         }
+
+        /* Silhouette Style for Locked Squares */
+        .chord-btn.locked {
+            background-color: transparent !important;
+            border: 2px dashed var(--silhouette-border);
+            opacity: 0.5;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        .chord-btn.locked:active { transform: none; }
+
+        /* Colors - Only applied when NOT locked */
+        .chord-btn:not(.locked).red { background-color: #ff5252; }
+        .chord-btn:not(.locked).brown { background-color: #8d6e63; }
+        .chord-btn:not(.locked).pink { background-color: #f48fb1; }
+        .chord-btn:not(.locked).purple { background-color: #ba68c8; }
+        .chord-btn:not(.locked).orange { background-color: #ffb74d; }
+        .chord-btn:not(.locked).yellow { background-color: #fff176; }
+        .chord-btn:not(.locked).green { background-color: #81c784; }
+        .chord-btn:not(.locked).teal { background-color: #4db6ac; }
+        .chord-btn:not(.locked).grey { background-color: #b0bec5; }
 
         @media (max-width: 420px) {
             .chord-btn {
@@ -106,30 +129,12 @@
 
         .chord-btn:active:not(.locked) { transform: scale(0.92); }
 
-        .chord-btn.locked {
-            background-color: #dfe6e9 !important;
-            opacity: 0.1;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
-        .red { background-color: #ff5252; }
-        .brown { background-color: #8d6e63; }
-        .pink { background-color: #f48fb1; }
-        .purple { background-color: #ba68c8; }
-        .orange { background-color: #ffb74d; }
-        .yellow { background-color: #fff176; }
-        .green { background-color: #81c784; }
-        .teal { background-color: #4db6ac; }
-        .grey { background-color: #b0bec5; }
-
         #msg { margin-top: 20px; font-size: 1.1rem; min-height: 1.5rem; font-weight: 500; color: var(--text-sub); }
     </style>
 </head>
 <body>
 
     <div class="container">
-
         <div class="stats">
             <span id="streak" class="stat-val">0</span>
             <span class="stat-label">Consecutive Correct</span>
@@ -162,7 +167,6 @@
         const soundBuffers = {};
         const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey'];
         
-        // Changed start count to 1 so only Red is available initially
         let activeCount = 1; 
         let streak = 0;
         let currentTarget = null;
@@ -199,6 +203,11 @@
 
         function checkAnswer(choice) {
             if (!currentTarget) return;
+            
+            // Prevent clicking locked buttons
+            const btn = document.getElementById(`btn-${choice}`);
+            if (btn.classList.contains('locked')) return;
+
             if (choice === currentTarget) {
                 streak++;
                 document.getElementById('msg').innerText = "Correct! ✨";
@@ -224,11 +233,13 @@
             document.getElementById('progress-bar').style.width = (streak / streakGoal * 100) + "%";
             progression.forEach((color, index) => {
                 const btn = document.getElementById(`btn-${color}`);
-                if (btn && index < activeCount) btn.classList.remove('locked');
+                if (btn && index < activeCount) {
+                    btn.classList.remove('locked');
+                } else {
+                    btn.classList.add('locked');
+                }
             });
         }
     </script>
 </body>
 </html>
-
-```
