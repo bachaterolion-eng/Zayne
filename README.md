@@ -127,7 +127,6 @@
 <body>
 
     <div class="container">
-        <h1>Prodigies-Eguchi</h1>
 
         <div class="stats">
             <span id="streak" class="stat-val">0</span>
