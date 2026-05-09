@@ -2,18 +2,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piano Pitch Training</title>
+    <title>PRODIGIES - EGUCHI</title>
     <style>
         :root {
-            --bg-color: #f0f2f5;
-            --text-main: #2d3436;
-            --text-sub: #636e72;
-            --progress-bg: #dfe6e9;
-            --progress-fill: #2ecc71;
+            --bg-color: #ffffff;
+            --text-main: #000000;
+            --text-sub: #888888;
+            --progress-bg: #eeeeee;
+            --progress-fill: #000000;
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             margin: 0;
@@ -25,86 +25,95 @@
 
         .container {
             width: 100%;
-            max-width: 650px;
-            padding: 20px;
+            max-width: 800px; /* Wider container for bigger squares */
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
         }
 
+        /* Fancy Bold Black Logo */
+        h1 {
+            font-size: 2.5rem;
+            font-weight: 900;
+            letter-spacing: 8px;
+            text-transform: uppercase;
+            margin: 0 0 40px 0;
+            color: #000000;
+            border-bottom: 4px solid #000000;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
         .stats { margin-bottom: 10px; }
-        .stat-val { display: block; font-size: 4.5rem; font-weight: 700; color: #000000; line-height: 1; }
-        .stat-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-sub); }
+        .stat-val { display: block; font-size: 5rem; font-weight: 800; color: #000000; line-height: 1; }
+        .stat-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 3px; color: var(--text-sub); }
 
         .progress-container {
             width: 100%;
             max-width: 500px;
-            height: 14px;
+            height: 8px;
             background-color: var(--progress-bg);
-            border-radius: 10px;
-            margin: 20px 0 30px 0;
+            border-radius: 0; /* Modern flat look */
+            margin: 25px 0 40px 0;
             overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .progress-bar {
             height: 100%;
             width: 0%;
             background-color: var(--progress-fill);
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 0.5s cubic-bezier(0.19, 1, 0.22, 1);
         }
 
-        .play-area { margin-bottom: 40px; }
+        .play-area { margin-bottom: 50px; }
         #play-btn {
-            background: #2d3436;
+            background: #000000;
             color: white;
             border: none;
-            padding: 22px 70px;
-            border-radius: 50px;
-            font-size: 1.2rem;
-            font-weight: 600;
+            padding: 24px 80px;
+            border-radius: 0; /* Modern square edges */
+            font-size: 1.1rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 2px;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
 
-        #play-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(0,0,0,0.15); }
-        #play-btn:active { transform: translateY(0); }
+        #play-btn:hover { background: #333333; transform: scale(1.02); }
 
+        /* Massive Squares Grid */
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 25px; 
+            gap: 30px; 
             width: 100%;
         }
 
         .chord-btn {
             aspect-ratio: 1 / 1;
             border: none;
-            border-radius: 20px;
+            border-radius: 4px; /* Clean sharp edges with slight rounding */
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            transition: all 0.3s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
         .chord-btn:hover:not(.locked) {
-            transform: scale(1.03);
-            filter: brightness(1.05);
-        }
-
-        .chord-btn:active:not(.locked) {
-            transform: scale(0.97);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(0,0,0,0.15);
         }
 
         .chord-btn.locked {
-            background-color: #dfe6e9 !important;
-            opacity: 0.15;
+            background-color: #f5f5f5 !important;
+            opacity: 0.1;
             cursor: not-allowed;
             box-shadow: none;
         }
 
-        /* Color definitions as per Gemini_Generated_Image_mzqbjcmzqbjcmzqb.png */
+        /* Color palette from Gemini_Generated_Image_mzqbjcmzqbjcmzqb.png */
         .red { background-color: #ff5252; }
         .brown { background-color: #8d6e63; }
         .pink { background-color: #f48fb1; }
@@ -115,15 +124,29 @@
         .teal { background-color: #4db6ac; }
         .grey { background-color: #b0bec5; }
 
-        #msg { margin-top: 25px; font-size: 1.1rem; font-weight: 500; height: 1.5rem; letter-spacing: 0.5px; }
+        #msg { 
+            margin-top: 30px; 
+            font-size: 0.9rem; 
+            text-transform: uppercase; 
+            letter-spacing: 2px; 
+            font-weight: bold;
+            height: 1.5rem; 
+        }
+
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8rem; }
+            .grid { gap: 15px; }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <h1>Prodigies - Eguchi</h1>
+
         <div class="stats">
             <span id="streak" class="stat-val">0</span>
-            <span class="stat-label">Consecutive Correct</span>
+            <span class="stat-label">Consecutive</span>
         </div>
 
         <div class="progress-container">
@@ -132,7 +155,7 @@
 
         <div class="play-area">
             <button id="play-btn" onclick="handlePlayButton()">Listen</button>
-            <div id="msg">Loading piano samples...</div>
+            <div id="msg">Initializing...</div>
         </div>
 
         <div class="grid">
@@ -156,7 +179,7 @@
         let activeCount = 2;
         let streak = 0;
         let currentTarget = null;
-        const streakGoal = 10; // Updated goal to 10
+        const streakGoal = 10;
 
         async function loadSound(name) {
             try {
@@ -169,7 +192,7 @@
         }
 
         Promise.all(progression.map(name => loadSound(name))).then(() => {
-            document.getElementById('msg').innerText = "Ready";
+            document.getElementById('msg').innerText = "System Ready";
         });
 
         function playSound(name) {
@@ -187,8 +210,8 @@
                 currentTarget = available[Math.floor(Math.random() * available.length)];
             }
             playSound(currentTarget);
-            document.getElementById('msg').innerText = "Listen closely...";
-            document.getElementById('msg').style.color = "#636e72";
+            document.getElementById('msg').innerText = "Focus on Pitch";
+            document.getElementById('msg').style.color = "#888";
         }
 
         function checkAnswer(choice) {
@@ -196,22 +219,21 @@
 
             if (choice === currentTarget) {
                 streak++;
-                document.getElementById('msg').innerText = "Correct! ✨";
+                document.getElementById('msg').innerText = "Correct";
                 document.getElementById('msg').style.color = "#2ecc71";
                 
                 if (streak >= streakGoal && activeCount < progression.length) {
                     activeCount++;
                     streak = 0;
-                    alert("Well done! Next level unlocked.");
                 }
                 
                 currentTarget = null;
                 updateUI();
-                setTimeout(handlePlayButton, 1000);
+                setTimeout(handlePlayButton, 800);
             } else {
                 streak = 0;
-                document.getElementById('msg').innerText = "Incorrect. Try again!";
-                document.getElementById('msg').style.color = "#e74c3c";
+                document.getElementById('msg').innerText = "Reset";
+                document.getElementById('msg').style.color = "#ff5252";
                 updateUI();
                 playSound(currentTarget); 
             }
@@ -230,3 +252,5 @@
     </script>
 </body>
 </html>
+
+```
