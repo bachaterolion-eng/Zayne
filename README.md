@@ -1,4 +1,3 @@
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -34,7 +33,6 @@
             text-align: center;
         }
 
-        /* Centered Black Title */
         h1 {
             color: #000000 !important;
             font-size: 2rem;
@@ -89,7 +87,6 @@
             width: auto;
         }
 
-        /* Large Squares */
         .chord-btn {
             width: 120px;
             height: 120px;
@@ -132,7 +129,7 @@
 <body>
 
     <div class="container">
-      
+        <h1>Prodigies-Eguchi</h1>
 
         <div class="stats">
             <span id="streak" class="stat-val">0</span>
@@ -150,7 +147,7 @@
 
         <div class="grid">
             <button class="chord-btn red" id="btn-red" onclick="checkAnswer('red')"></button>
-            <button class="chord-btn brown" id="btn-brown" onclick="checkAnswer('brown')"></button>
+            <button class="chord-btn brown locked" id="btn-brown" onclick="checkAnswer('brown')"></button>
             <button class="chord-btn pink locked" id="btn-pink" onclick="checkAnswer('pink')"></button>
             <button class="chord-btn purple locked" id="btn-purple" onclick="checkAnswer('purple')"></button>
             <button class="chord-btn orange locked" id="btn-orange" onclick="checkAnswer('orange')"></button>
@@ -166,7 +163,8 @@
         const soundBuffers = {};
         const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey'];
         
-        let activeCount = 2;
+        // Changed start count to 1 so only Red is available initially
+        let activeCount = 1; 
         let streak = 0;
         let currentTarget = null;
         const streakGoal = 10;
