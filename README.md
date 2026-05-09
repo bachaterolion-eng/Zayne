@@ -1,3 +1,4 @@
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,11 +34,14 @@
             text-align: center;
         }
 
-        /* Ensuring the header is black */
+        /* Centered Black Title */
         h1 {
             color: #000000 !important;
-            font-size: 1.8rem;
-            margin-bottom: 10px;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 0 20px 0;
+            text-align: center;
+            width: 100%;
         }
 
         .stats { margin-bottom: 5px; }
@@ -63,7 +67,6 @@
 
         .play-area { margin-bottom: 30px; }
         
-        /* Smaller Listen button */
         #play-btn {
             background: #2d3436;
             color: white;
@@ -73,32 +76,34 @@
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
+            transition: transform 0.1s;
         }
 
-        /* SQUARE SIZING - DOUBLED SIZE */
+        #play-btn:active { transform: scale(0.96); }
+
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px; 
-            justify-items: center; /* Centers squares if screen is wide */
+            justify-items: center;
             width: auto;
         }
 
+        /* Large Squares */
         .chord-btn {
-            width: 120px;   /* Fixed width for size */
-            height: 120px;  /* Fixed height for perfect square */
+            width: 120px;
+            height: 120px;
             border: none;
-            border-radius: 15px; 
+            border-radius: 20px; 
             cursor: pointer;
             transition: transform 0.1s;
             box-shadow: 0 6px 12px rgba(0,0,0,0.08);
         }
 
-        /* Mobile adjustment to ensure they fit */
-        @media (max-width: 400px) {
+        @media (max-width: 420px) {
             .chord-btn {
-                width: 95px;
-                height: 95px;
+                width: 100px;
+                height: 100px;
             }
         }
 
@@ -121,12 +126,13 @@
         .teal { background-color: #4db6ac; }
         .grey { background-color: #b0bec5; }
 
-        #msg { margin-top: 20px; font-size: 1.1rem; min-height: 1.5rem; font-weight: 500; }
+        #msg { margin-top: 20px; font-size: 1.1rem; min-height: 1.5rem; font-weight: 500; color: var(--text-sub); }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <h1>Prodigies-Eguchi</h1>
 
         <div class="stats">
             <span id="streak" class="stat-val">0</span>
