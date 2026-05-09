@@ -25,12 +25,19 @@
 
         .container {
             width: 100%;
-            max-width: 900px; /* Increased to allow squares to grow */
+            max-width: 600px;
             padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
+        }
+
+        /* Ensuring the header is black */
+        h1 {
+            color: #000000 !important;
+            font-size: 1.8rem;
+            margin-bottom: 10px;
         }
 
         .stats { margin-bottom: 5px; }
@@ -39,7 +46,7 @@
 
         .progress-container {
             width: 80%;
-            max-width: 350px;
+            max-width: 300px;
             height: 12px;
             background-color: var(--progress-bg);
             border-radius: 10px;
@@ -56,43 +63,50 @@
 
         .play-area { margin-bottom: 30px; }
         
+        /* Smaller Listen button */
         #play-btn {
             background: #2d3436;
             color: white;
             border: none;
-            padding: 12px 40px; /* Reduced padding for smaller button */
+            padding: 12px 45px; 
             border-radius: 40px;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
-            transition: transform 0.2s;
         }
 
-        #play-btn:active { transform: scale(0.96); }
-
+        /* SQUARE SIZING - DOUBLED SIZE */
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 30px; /* Increased gap */
-            width: 100%;
-            max-width: 800px; /* Significantly wider for "twice the size" feel */
+            gap: 20px; 
+            justify-items: center; /* Centers squares if screen is wide */
+            width: auto;
         }
 
         .chord-btn {
-            aspect-ratio: 1 / 1;
+            width: 120px;   /* Fixed width for size */
+            height: 120px;  /* Fixed height for perfect square */
             border: none;
-            border-radius: 20px; /* Adjusted radius for larger size */
+            border-radius: 15px; 
             cursor: pointer;
-            transition: transform 0.2s;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
-            width: 100%;
+            transition: transform 0.1s;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
         }
 
-        .chord-btn:active:not(.locked) { transform: scale(0.94); }
+        /* Mobile adjustment to ensure they fit */
+        @media (max-width: 400px) {
+            .chord-btn {
+                width: 95px;
+                height: 95px;
+            }
+        }
+
+        .chord-btn:active:not(.locked) { transform: scale(0.92); }
 
         .chord-btn.locked {
             background-color: #dfe6e9 !important;
-            opacity: 0.12;
+            opacity: 0.1;
             cursor: not-allowed;
             box-shadow: none;
         }
@@ -113,6 +127,8 @@
 <body>
 
     <div class="container">
+        <h1>Prodigies-Eguchi</h1>
+
         <div class="stats">
             <span id="streak" class="stat-val">0</span>
             <span class="stat-label">Consecutive Correct</span>
