@@ -6,7 +6,7 @@
     <style>
         :root {
             --bg-color: #f0f2f5;
-            --text-main: #000000; /* Set main text to black */
+            --text-main: #000000;
             --text-sub: #636e72;
             --progress-bg: #dfe6e9;
             --progress-fill: #2ecc71;
@@ -25,7 +25,7 @@
 
         .container {
             width: 100%;
-            max-width: 800px; /* Increased container width */
+            max-width: 650px;
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -33,32 +33,34 @@
             text-align: center;
         }
 
-        .stats { margin-bottom: 10px; }
-        .stat-val { 
-            display: block; 
-            font-size: 4.5rem; 
-            font-weight: 700; 
-            color: #000000; /* Heading explicitly black */
-            line-height: 1; 
+        /* Fixed the Black Title */
+        .title {
+            color: #000000;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            text-decoration: none;
         }
+
+        .stats { margin-bottom: 10px; }
+        .stat-val { display: block; font-size: 5rem; font-weight: 700; color: #000000; line-height: 1; }
         .stat-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-sub); }
 
         .progress-container {
             width: 100%;
-            max-width: 600px; /* Wider progress bar */
+            max-width: 400px;
             height: 14px;
             background-color: var(--progress-bg);
             border-radius: 10px;
             margin: 20px 0 30px 0;
             overflow: hidden;
-            box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
         }
 
         .progress-bar {
             height: 100%;
             width: 0%;
             background-color: var(--progress-fill);
-            transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: width 0.4s ease;
         }
 
         .play-area { margin-bottom: 40px; }
@@ -66,47 +68,40 @@
             background: #2d3436;
             color: white;
             border: none;
-            padding: 22px 70px;
+            padding: 25px 80px;
             border-radius: 50px;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
             font-weight: 600;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
-
-        #play-btn:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(0,0,0,0.15); }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 35px; /* Increased gap for bigger appearance */
+            gap: 20px; 
             width: 100%;
-            max-width: 700px; /* Wider grid to allow buttons to grow */
+            max-width: 500px; /* Limits overall width to keep them as squares */
         }
 
         .chord-btn {
             aspect-ratio: 1 / 1;
             border: none;
-            border-radius: 25px; /* Slightly more rounded corners */
+            border-radius: 12px; /* Small radius = Squares with slightly soft corners */
             cursor: pointer;
-            transition: all 0.2s ease;
-            box-shadow: 0 8px 16px rgba(0,0,0,0.08);
+            transition: transform 0.2s;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
+            width: 100%; /* Makes them fill the grid columns */
         }
 
-        .chord-btn:hover:not(.locked) {
-            transform: scale(1.03);
-            filter: brightness(1.05);
-        }
+        .chord-btn:active:not(.locked) { transform: scale(0.95); }
 
         .chord-btn.locked {
             background-color: #dfe6e9 !important;
-            opacity: 0.15;
+            opacity: 0.1;
             cursor: not-allowed;
             box-shadow: none;
         }
 
-        /* Colors */
         .red { background-color: #ff5252; }
         .brown { background-color: #8d6e63; }
         .pink { background-color: #f48fb1; }
@@ -117,12 +112,15 @@
         .teal { background-color: #4db6ac; }
         .grey { background-color: #b0bec5; }
 
-        #msg { margin-top: 25px; font-size: 1.1rem; font-weight: 500; height: 1.5rem; letter-spacing: 0.5px; }
+        #msg { margin-top: 25px; font-size: 1.1rem; min-height: 1.5rem; }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <!-- New Black Heading -->
+        <h1 class="title">Prodigies-Eguchi</h1>
+
         <div class="stats">
             <span id="streak" class="stat-val">0</span>
             <span class="stat-label">Consecutive Correct</span>
@@ -134,7 +132,7 @@
 
         <div class="play-area">
             <button id="play-btn" onclick="handlePlayButton()">Listen</button>
-            <div id="msg">Loading piano samples...</div>
+            <div id="msg">Ready</div>
         </div>
 
         <div class="grid">
@@ -158,21 +156,17 @@
         let activeCount = 2;
         let streak = 0;
         let currentTarget = null;
-        const streakGoal = 10; 
+        const streakGoal = 10;
 
         async function loadSound(name) {
             try {
                 const response = await fetch(`${name}.wav`); 
                 const arrayBuffer = await response.arrayBuffer();
                 soundBuffers[name] = await audioCtx.decodeAudioData(arrayBuffer);
-            } catch (e) {
-                console.error(`Error: Could not find ${name}.wav`, e);
-            }
+            } catch (e) { console.error(e); }
         }
 
-        Promise.all(progression.map(name => loadSound(name))).then(() => {
-            document.getElementById('msg').innerText = "Ready";
-        });
+        progression.forEach(name => loadSound(name));
 
         function playSound(name) {
             if (audioCtx.state === 'suspended') audioCtx.resume();
@@ -195,35 +189,29 @@
 
         function checkAnswer(choice) {
             if (!currentTarget) return;
-
             if (choice === currentTarget) {
                 streak++;
                 document.getElementById('msg').innerText = "Correct! ✨";
                 document.getElementById('msg').style.color = "#2ecc71";
-                
                 if (streak >= streakGoal && activeCount < progression.length) {
                     activeCount++;
                     streak = 0;
-                    alert("Well done! Next level unlocked.");
+                    alert("Next level unlocked!");
                 }
-                
                 currentTarget = null;
                 updateUI();
                 setTimeout(handlePlayButton, 1000);
             } else {
                 streak = 0;
-                document.getElementById('msg').innerText = "Incorrect. Try again!";
+                document.getElementById('msg').innerText = "Try again!";
                 document.getElementById('msg').style.color = "#e74c3c";
                 updateUI();
-                playSound(currentTarget); 
             }
         }
 
         function updateUI() {
             document.getElementById('streak').innerText = streak;
-            const progressPercent = (streak / streakGoal) * 100;
-            document.getElementById('progress-bar').style.width = `${progressPercent}%`;
-
+            document.getElementById('progress-bar').style.width = (streak / streakGoal * 100) + "%";
             progression.forEach((color, index) => {
                 const btn = document.getElementById(`btn-${color}`);
                 if (btn && index < activeCount) btn.classList.remove('locked');
