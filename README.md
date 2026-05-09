@@ -25,7 +25,7 @@
 
         .container {
             width: 100%;
-            max-width: 650px;
+            max-width: 600px;
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -33,26 +33,17 @@
             text-align: center;
         }
 
-        /* Fixed the Black Title */
-        .title {
-            color: #000000;
-            font-size: 2rem;
-            font-weight: 700;
-            margin-bottom: 20px;
-            text-decoration: none;
-        }
-
-        .stats { margin-bottom: 10px; }
-        .stat-val { display: block; font-size: 5rem; font-weight: 700; color: #000000; line-height: 1; }
-        .stat-label { font-size: 0.9rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-sub); }
+        .stats { margin-bottom: 5px; }
+        .stat-val { display: block; font-size: 5.5rem; font-weight: 700; color: #000000; line-height: 1; }
+        .stat-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-sub); }
 
         .progress-container {
-            width: 100%;
-            max-width: 400px;
-            height: 14px;
+            width: 80%;
+            max-width: 350px;
+            height: 12px;
             background-color: var(--progress-bg);
             border-radius: 10px;
-            margin: 20px 0 30px 0;
+            margin: 15px 0 25px 0;
             overflow: hidden;
         }
 
@@ -63,41 +54,46 @@
             transition: width 0.4s ease;
         }
 
-        .play-area { margin-bottom: 40px; }
+        .play-area { margin-bottom: 30px; }
+        
+        /* Slightly smaller Listen button */
         #play-btn {
             background: #2d3436;
             color: white;
             border: none;
-            padding: 25px 80px;
-            border-radius: 50px;
-            font-size: 1.3rem;
+            padding: 15px 50px; 
+            border-radius: 40px;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
+            transition: transform 0.2s;
         }
+
+        #play-btn:active { transform: scale(0.96); }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 20px; 
             width: 100%;
-            max-width: 500px; /* Limits overall width to keep them as squares */
+            max-width: 550px; /* Wider grid for bigger squares */
         }
 
         .chord-btn {
             aspect-ratio: 1 / 1;
             border: none;
-            border-radius: 12px; /* Small radius = Squares with slightly soft corners */
+            border-radius: 15px; /* Square shape with slight rounding */
             cursor: pointer;
             transition: transform 0.2s;
-            box-shadow: 0 8px 15px rgba(0,0,0,0.1);
-            width: 100%; /* Makes them fill the grid columns */
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            width: 100%;
         }
 
-        .chord-btn:active:not(.locked) { transform: scale(0.95); }
+        .chord-btn:active:not(.locked) { transform: scale(0.94); }
 
         .chord-btn.locked {
             background-color: #dfe6e9 !important;
-            opacity: 0.1;
+            opacity: 0.12;
             cursor: not-allowed;
             box-shadow: none;
         }
@@ -112,15 +108,12 @@
         .teal { background-color: #4db6ac; }
         .grey { background-color: #b0bec5; }
 
-        #msg { margin-top: 25px; font-size: 1.1rem; min-height: 1.5rem; }
+        #msg { margin-top: 20px; font-size: 1.1rem; min-height: 1.5rem; font-weight: 500; }
     </style>
 </head>
 <body>
 
     <div class="container">
-        <!-- New Black Heading -->
-        <h1 class="title">Prodigies-Eguchi</h1>
-
         <div class="stats">
             <span id="streak" class="stat-val">0</span>
             <span class="stat-label">Consecutive Correct</span>
