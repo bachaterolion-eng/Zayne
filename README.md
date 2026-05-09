@@ -25,7 +25,7 @@
 
         .container {
             width: 100%;
-            max-width: 600px;
+            max-width: 900px; /* Increased to allow squares to grow */
             padding: 20px;
             display: flex;
             flex-direction: column;
@@ -56,14 +56,13 @@
 
         .play-area { margin-bottom: 30px; }
         
-        /* Slightly smaller Listen button */
         #play-btn {
             background: #2d3436;
             color: white;
             border: none;
-            padding: 15px 50px; 
+            padding: 12px 40px; /* Reduced padding for smaller button */
             border-radius: 40px;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.2s;
@@ -74,18 +73,18 @@
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px; 
+            gap: 30px; /* Increased gap */
             width: 100%;
-            max-width: 550px; /* Wider grid for bigger squares */
+            max-width: 800px; /* Significantly wider for "twice the size" feel */
         }
 
         .chord-btn {
             aspect-ratio: 1 / 1;
             border: none;
-            border-radius: 15px; /* Square shape with slight rounding */
+            border-radius: 20px; /* Adjusted radius for larger size */
             cursor: pointer;
             transition: transform 0.2s;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
             width: 100%;
         }
 
