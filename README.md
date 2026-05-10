@@ -97,19 +97,17 @@
             border: 2px solid transparent;
         }
 
-        /* Silhouette Logic: Double the thickness (2px) and dotted */
         .chord-btn.locked {
             cursor: not-allowed;
             box-shadow: none;
             background-color: transparent !important;
-            border-width: 2px; /* Changed from 1px to 2px */
+            border-width: 2px; 
             border-style: dotted;
             opacity: 0.8;
         }
 
         .chord-btn.locked:active { transform: none; }
 
-        /* Silhouette Colors (Locked) */
         .chord-btn.locked.red    { border-color: #ff5252; }
         .chord-btn.locked.brown  { border-color: #8d6e63; }
         .chord-btn.locked.pink   { border-color: #f48fb1; }
@@ -120,7 +118,6 @@
         .chord-btn.locked.teal   { border-color: #4db6ac; }
         .chord-btn.locked.grey   { border-color: #b0bec5; }
 
-        /* Unlocked Styles (Solid Full Color) */
         .chord-btn:not(.locked) { border: 2px solid transparent; }
         .chord-btn:not(.locked).red    { background-color: #ff5252; }
         .chord-btn:not(.locked).brown  { background-color: #8d6e63; }
@@ -142,6 +139,7 @@
         .chord-btn:active:not(.locked) { transform: scale(0.92); }
 
         #msg { margin-top: 20px; font-size: 1.1rem; min-height: 1.5rem; font-weight: 500; color: var(--text-sub); }
+        #timer-display { font-weight: 700; color: #e74c3c; margin-top: 5px; font-size: 1.2rem; }
     </style>
 </head>
 <body>
@@ -159,6 +157,7 @@
         <div class="play-area">
             <button id="play-btn" onclick="handlePlayButton()">Listen</button>
             <div id="msg">Ready</div>
+            <div id="timer-display"></div>
         </div>
 
         <div class="grid">
@@ -183,6 +182,9 @@
         let streak = 0;
         let currentTarget = null;
         const streakGoal = 10;
+        
+        let timeLeft = 10;
+        let timerInterval = null;
 
         async function loadSound(name) {
             try {
@@ -203,6 +205,33 @@
             source.start(0);
         }
 
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 10;
+            updateTimerUI();
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                updateTimerUI();
+                if (timeLeft <= 0) {
+                    clearInterval(timerInterval);
+                    handleTimeout();
+                }
+            }, 1000);
+        }
+
+        function updateTimerUI() {
+            document.getElementById('timer-display').innerText = timeLeft > 0 ? `Time: ${timeLeft}s` : "";
+        }
+
+        function handleTimeout() {
+            streak = 0;
+            currentTarget = null;
+            document.getElementById('msg').innerText = "Time's up! Resetting...";
+            document.getElementById('msg').style.color = "#e74c3c";
+            updateUI();
+            setTimeout(handlePlayButton, 1500);
+        }
+
         function handlePlayButton() {
             if (!currentTarget) {
                 const available = progression.slice(0, activeCount);
@@ -211,6 +240,7 @@
             playSound(currentTarget);
             document.getElementById('msg').innerText = "Listen closely...";
             document.getElementById('msg').style.color = "#636e72";
+            startTimer();
         }
 
         function checkAnswer(choice) {
@@ -218,6 +248,9 @@
             
             const btn = document.getElementById(`btn-${choice}`);
             if (btn.classList.contains('locked')) return;
+
+            clearInterval(timerInterval);
+            document.getElementById('timer-display').innerText = "";
 
             if (choice === currentTarget) {
                 streak++;
@@ -254,3 +287,5 @@
     </script>
 </body>
 </html>
+
+```
