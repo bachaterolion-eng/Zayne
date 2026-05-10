@@ -165,7 +165,6 @@
 <body>
 
     <div class="container">
-        <h1>Prodigies-Eguchi</h1>
 
         <div class="stats">
             <div class="stat-group">
