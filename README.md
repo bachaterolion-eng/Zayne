@@ -97,12 +97,12 @@
             border: 2px solid transparent;
         }
 
-        /* Silhouette Logic: Extremely thin dotted border, no background fill */
+        /* Silhouette Logic: Double the thickness (2px) and dotted */
         .chord-btn.locked {
             cursor: not-allowed;
             box-shadow: none;
             background-color: transparent !important;
-            border-width: 1px;
+            border-width: 2px; /* Changed from 1px to 2px */
             border-style: dotted;
             opacity: 0.8;
         }
