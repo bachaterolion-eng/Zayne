@@ -1,4 +1,3 @@
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -20,7 +19,7 @@
             margin: 0;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start; /* Changed to flex-start for better mobile scrolling */
             min-height: 100vh;
         }
 
@@ -34,12 +33,22 @@
             text-align: center;
         }
 
-        /* Updated Stats Layout to keep things centered */
+        /* Title fix: explicitly centered and cleared of floats */
+        h1 {
+            color: #1a73e8; /* Matched the blue in your screenshot */
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin: 10px 0 30px 0;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Stats Layout fix: Fixed widths ensure the centers of the numbers align */
         .stats { 
             margin-bottom: 5px; 
             display: flex; 
             justify-content: center; 
-            gap: 50px; 
+            gap: 20px; 
             width: 100%;
         }
         
@@ -47,6 +56,7 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
+            width: 120px; /* Fixed width to keep numbers balanced */
         }
         
         .stat-val { display: block; font-size: 5.5rem; font-weight: 700; color: #000000; line-height: 1; }
@@ -70,7 +80,7 @@
             transition: width 0.4s ease;
         }
 
-        .play-area { margin-bottom: 30px; }
+        .play-area { margin-bottom: 30px; width: 100%; }
         
         #play-btn {
             background: #2d3436;
@@ -78,7 +88,7 @@
             border: none;
             padding: 12px 45px; 
             border-radius: 40px;
-            font-size: 1rem;
+            font-size: 1.1rem;
             font-weight: 600;
             cursor: pointer;
             transition: transform 0.1s;
@@ -97,20 +107,21 @@
         .chord-btn {
             width: 120px;
             height: 120px;
-            border-radius: 20px; 
+            border-radius: 25px; 
             cursor: pointer;
             transition: transform 0.1s, background-color 0.3s, border 0.3s;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
             border: 2px solid transparent;
         }
 
+        /* Silhouette Styles */
         .chord-btn.locked {
             cursor: not-allowed;
             box-shadow: none;
             background-color: transparent !important;
             border-width: 2px; 
             border-style: dotted;
-            opacity: 0.8;
+            opacity: 0.6;
         }
 
         .chord-btn.locked.red    { border-color: #ff5252; }
@@ -123,6 +134,7 @@
         .chord-btn.locked.teal   { border-color: #4db6ac; }
         .chord-btn.locked.grey   { border-color: #b0bec5; }
 
+        /* Full Color Styles */
         .chord-btn:not(.locked).red    { background-color: #ff5252; }
         .chord-btn:not(.locked).brown  { background-color: #8d6e63; }
         .chord-btn:not(.locked).pink   { background-color: #f48fb1; }
@@ -133,15 +145,20 @@
         .chord-btn:not(.locked).teal   { background-color: #4db6ac; }
         .chord-btn:not(.locked).grey   { background-color: #b0bec5; }
 
-        .chord-btn:active:not(.locked) { transform: scale(0.92); }
+        @media (max-width: 420px) {
+            .chord-btn { width: 100px; height: 100px; }
+            .stat-val { font-size: 4rem; }
+        }
 
-        #msg { margin-top: 20px; font-size: 1.1rem; min-height: 1.5rem; font-weight: 500; color: var(--text-sub); }
+        #msg { margin-top: 15px; font-size: 1.1rem; min-height: 1.5rem; font-weight: 500; color: var(--text-sub); }
         #timer-display { font-weight: 700; color: #e74c3c; margin-top: 5px; font-size: 1.2rem; min-height: 1.5rem;}
     </style>
 </head>
 <body>
 
     <div class="container">
+        <h1>Prodigies-Eguchi</h1>
+
         <div class="stats">
             <div class="stat-group">
                 <span id="streak" class="stat-val">0</span>
@@ -212,11 +229,9 @@
 
         function startTimer() {
             if (isTimerRunning) return; 
-            
             isTimerRunning = true;
             timeLeft = 10;
             updateTimerUI();
-            
             timerInterval = setInterval(() => {
                 timeLeft--;
                 updateTimerUI();
@@ -241,16 +256,14 @@
             strikes++;
             streak = 0;
             currentTarget = null;
-            
             if (strikes >= 3) {
                 alert("3 Strikes! Returning to the beginning.");
                 strikes = 0;
                 activeCount = 1;
             } else {
-                document.getElementById('msg').innerText = `${message} Streak reset.`;
+                document.getElementById('msg').innerText = message;
                 document.getElementById('msg').style.color = "#e74c3c";
             }
-            
             updateUI();
             setTimeout(handlePlayButton, 1500);
         }
@@ -268,10 +281,8 @@
 
         function checkAnswer(choice) {
             if (!currentTarget) return;
-            
             const btn = document.getElementById(`btn-${choice}`);
             if (btn.classList.contains('locked')) return;
-
             if (choice === currentTarget) {
                 stopTimer();
                 streak++;
