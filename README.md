@@ -1,3 +1,4 @@
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,18 +34,11 @@
             text-align: center;
         }
 
-        h1 {
-            color: #000000 !important;
-            font-size: 2rem;
-            font-weight: 700;
-            margin: 0 0 20px 0;
-            text-align: center;
-            width: 100%;
-        }
-
-        .stats { margin-bottom: 5px; }
+        .stats { margin-bottom: 5px; display: flex; gap: 40px; }
+        .stat-group { display: flex; flex-direction: column; }
         .stat-val { display: block; font-size: 5.5rem; font-weight: 700; color: #000000; line-height: 1; }
         .stat-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-sub); }
+        .strike-val { color: #e74c3c; }
 
         .progress-container {
             width: 80%;
@@ -106,8 +100,6 @@
             opacity: 0.8;
         }
 
-        .chord-btn.locked:active { transform: none; }
-
         .chord-btn.locked.red    { border-color: #ff5252; }
         .chord-btn.locked.brown  { border-color: #8d6e63; }
         .chord-btn.locked.pink   { border-color: #f48fb1; }
@@ -118,7 +110,6 @@
         .chord-btn.locked.teal   { border-color: #4db6ac; }
         .chord-btn.locked.grey   { border-color: #b0bec5; }
 
-        .chord-btn:not(.locked) { border: 2px solid transparent; }
         .chord-btn:not(.locked).red    { background-color: #ff5252; }
         .chord-btn:not(.locked).brown  { background-color: #8d6e63; }
         .chord-btn:not(.locked).pink   { background-color: #f48fb1; }
@@ -129,25 +120,24 @@
         .chord-btn:not(.locked).teal   { background-color: #4db6ac; }
         .chord-btn:not(.locked).grey   { background-color: #b0bec5; }
 
-        @media (max-width: 420px) {
-            .chord-btn {
-                width: 100px;
-                height: 100px;
-            }
-        }
-
         .chord-btn:active:not(.locked) { transform: scale(0.92); }
 
         #msg { margin-top: 20px; font-size: 1.1rem; min-height: 1.5rem; font-weight: 500; color: var(--text-sub); }
-        #timer-display { font-weight: 700; color: #e74c3c; margin-top: 5px; font-size: 1.2rem; }
+        #timer-display { font-weight: 700; color: #e74c3c; margin-top: 5px; font-size: 1.2rem; min-height: 1.5rem;}
     </style>
 </head>
 <body>
 
     <div class="container">
         <div class="stats">
-            <span id="streak" class="stat-val">0</span>
-            <span class="stat-label">Consecutive Correct</span>
+            <div class="stat-group">
+                <span id="streak" class="stat-val">0</span>
+                <span class="stat-label">Streak</span>
+            </div>
+            <div class="stat-group">
+                <span id="strikes" class="stat-val strike-val">0</span>
+                <span class="stat-label">Strikes</span>
+            </div>
         </div>
 
         <div class="progress-container">
@@ -180,11 +170,13 @@
         
         let activeCount = 1; 
         let streak = 0;
+        let strikes = 0;
         let currentTarget = null;
         const streakGoal = 10;
         
         let timeLeft = 10;
         let timerInterval = null;
+        let isTimerRunning = false;
 
         async function loadSound(name) {
             try {
@@ -206,28 +198,46 @@
         }
 
         function startTimer() {
-            clearInterval(timerInterval);
+            if (isTimerRunning) return; // Don't reset if already running
+            
+            isTimerRunning = true;
             timeLeft = 10;
             updateTimerUI();
+            
             timerInterval = setInterval(() => {
                 timeLeft--;
                 updateTimerUI();
                 if (timeLeft <= 0) {
-                    clearInterval(timerInterval);
-                    handleTimeout();
+                    stopTimer();
+                    handleMistake("Time's up!");
                 }
             }, 1000);
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            isTimerRunning = false;
+            document.getElementById('timer-display').innerText = "";
         }
 
         function updateTimerUI() {
             document.getElementById('timer-display').innerText = timeLeft > 0 ? `Time: ${timeLeft}s` : "";
         }
 
-        function handleTimeout() {
+        function handleMistake(message) {
+            strikes++;
             streak = 0;
             currentTarget = null;
-            document.getElementById('msg').innerText = "Time's up! Resetting...";
-            document.getElementById('msg').style.color = "#e74c3c";
+            
+            if (strikes >= 3) {
+                alert("3 Strikes! Returning to the beginning.");
+                strikes = 0;
+                activeCount = 1;
+            } else {
+                document.getElementById('msg').innerText = `${message} Streak reset.`;
+                document.getElementById('msg').style.color = "#e74c3c";
+            }
+            
             updateUI();
             setTimeout(handlePlayButton, 1500);
         }
@@ -236,11 +246,11 @@
             if (!currentTarget) {
                 const available = progression.slice(0, activeCount);
                 currentTarget = available[Math.floor(Math.random() * available.length)];
+                startTimer(); // Only start a fresh timer if it's a new target
             }
             playSound(currentTarget);
             document.getElementById('msg').innerText = "Listen closely...";
             document.getElementById('msg').style.color = "#636e72";
-            startTimer();
         }
 
         function checkAnswer(choice) {
@@ -249,10 +259,8 @@
             const btn = document.getElementById(`btn-${choice}`);
             if (btn.classList.contains('locked')) return;
 
-            clearInterval(timerInterval);
-            document.getElementById('timer-display').innerText = "";
-
             if (choice === currentTarget) {
+                stopTimer();
                 streak++;
                 document.getElementById('msg').innerText = "Correct! ✨";
                 document.getElementById('msg').style.color = "#2ecc71";
@@ -265,15 +273,14 @@
                 updateUI();
                 setTimeout(handlePlayButton, 1000);
             } else {
-                streak = 0;
-                document.getElementById('msg').innerText = "Try again!";
-                document.getElementById('msg').style.color = "#e74c3c";
-                updateUI();
+                stopTimer();
+                handleMistake("Wrong choice!");
             }
         }
 
         function updateUI() {
             document.getElementById('streak').innerText = streak;
+            document.getElementById('strikes').innerText = strikes;
             document.getElementById('progress-bar').style.width = (streak / streakGoal * 100) + "%";
             progression.forEach((color, index) => {
                 const btn = document.getElementById(`btn-${color}`);
