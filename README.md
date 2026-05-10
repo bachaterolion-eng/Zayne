@@ -90,43 +90,47 @@
         .chord-btn {
             width: 120px;
             height: 120px;
-            border: 3px solid transparent;
             border-radius: 20px; 
             cursor: pointer;
-            transition: transform 0.1s, background-color 0.3s, border-color 0.3s;
+            transition: transform 0.1s, background-color 0.3s, border 0.3s;
             box-shadow: 0 6px 12px rgba(0,0,0,0.08);
+            border: 2px solid transparent;
         }
 
-        /* Silhouette Logic: Solid border and faint background of the target color */
+        /* Silhouette Logic: Extremely thin dotted border, no background fill */
         .chord-btn.locked {
             cursor: not-allowed;
             box-shadow: none;
-            opacity: 0.6;
+            background-color: transparent !important;
+            border-width: 1px;
+            border-style: dotted;
+            opacity: 0.8;
         }
 
         .chord-btn.locked:active { transform: none; }
 
-        /* Locked Styles (Silhouettes) */
-        .chord-btn.locked.red    { border-color: #ff5252; background-color: rgba(255, 82, 82, 0.1) !important; }
-        .chord-btn.locked.brown  { border-color: #8d6e63; background-color: rgba(141, 110, 99, 0.1) !important; }
-        .chord-btn.locked.pink   { border-color: #f48fb1; background-color: rgba(244, 143, 177, 0.1) !important; }
-        .chord-btn.locked.purple { border-color: #ba68c8; background-color: rgba(186, 104, 200, 0.1) !important; }
-        .chord-btn.locked.orange { border-color: #ffb74d; background-color: rgba(255, 183, 77, 0.1) !important; }
-        .chord-btn.locked.yellow { border-color: #fff176; background-color: rgba(255, 241, 118, 0.1) !important; }
-        .chord-btn.locked.green  { border-color: #81c784; background-color: rgba(129, 199, 132, 0.1) !important; }
-        .chord-btn.locked.teal   { border-color: #4db6ac; background-color: rgba(77, 182, 172, 0.1) !important; }
-        .chord-btn.locked.grey   { border-color: #b0bec5; background-color: rgba(176, 190, 197, 0.1) !important; }
+        /* Silhouette Colors (Locked) */
+        .chord-btn.locked.red    { border-color: #ff5252; }
+        .chord-btn.locked.brown  { border-color: #8d6e63; }
+        .chord-btn.locked.pink   { border-color: #f48fb1; }
+        .chord-btn.locked.purple { border-color: #ba68c8; }
+        .chord-btn.locked.orange { border-color: #ffb74d; }
+        .chord-btn.locked.yellow { border-color: #fff176; }
+        .chord-btn.locked.green  { border-color: #81c784; }
+        .chord-btn.locked.teal   { border-color: #4db6ac; }
+        .chord-btn.locked.grey   { border-color: #b0bec5; }
 
-        /* Unlocked Styles (Full Color) */
-        .chord-btn:not(.locked).red    { background-color: #ff5252; border-color: transparent; }
-        .chord-btn:not(.locked).brown  { background-color: #8d6e63; border-color: transparent; }
-        .chord-btn:not(.locked).pink   { background-color: #f48fb1; border-color: transparent; }
-        .chord-btn:not(.locked).purple { background-color: #ba68c8; border-color: transparent; }
-        .chord-btn:not(.locked).orange { background-color: #ffb74d; border-color: transparent; }
-        .chord-btn:not(.locked).yellow { background-color: #fff176; border-color: transparent; }
-        .chord-btn:not(.locked).green  { background-color: #81c784; border-color: transparent; }
-        .chord-btn:not(.locked).teal   { background-color: #4db6ac; border-color: transparent; }
-        .chord-btn:not(.locked).grey   { background-color: #b0bec5; border-color: transparent; }
+        /* Unlocked Styles (Solid Full Color) */
+        .chord-btn:not(.locked) { border: 2px solid transparent; }
+        .chord-btn:not(.locked).red    { background-color: #ff5252; }
+        .chord-btn:not(.locked).brown  { background-color: #8d6e63; }
+        .chord-btn:not(.locked).pink   { background-color: #f48fb1; }
+        .chord-btn:not(.locked).purple { background-color: #ba68c8; }
+        .chord-btn:not(.locked).orange { background-color: #ffb74d; }
+        .chord-btn:not(.locked).yellow { background-color: #fff176; }
+        .chord-btn:not(.locked).green  { background-color: #81c784; }
+        .chord-btn:not(.locked).teal   { background-color: #4db6ac; }
+        .chord-btn:not(.locked).grey   { background-color: #b0bec5; }
 
         @media (max-width: 420px) {
             .chord-btn {
