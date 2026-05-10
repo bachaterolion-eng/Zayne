@@ -5,47 +5,46 @@
     <title>Piano Pitch Training</title>
     <style>
         :root {
-            --bg-color: #f0f2f5;
-            --text-main: #000000;
-            --text-sub: #636e72;
+            --bg-dark: #000000;
+            --panel-bg: #f0f2f5;
+            --text-main: #ffffff;
+            --text-panel: #000000;
+            --text-sub: #a0a0a0;
             --progress-bg: #dfe6e9;
             --progress-fill: #2ecc71;
         }
 
         body {
             font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
+            background-color: var(--bg-dark);
             color: var(--text-main);
             margin: 0;
             display: flex;
             justify-content: center;
-            align-items: flex-start; /* Changed to flex-start for better mobile scrolling */
+            align-items: flex-start;
             min-height: 100vh;
         }
 
         .container {
             width: 100%;
-            max-width: 600px;
-            padding: 20px;
+            max-width: 500px;
+            padding: 40px 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
         }
 
-        /* Title fix: explicitly centered and cleared of floats */
         h1 {
-            color: #1a73e8; /* Matched the blue in your screenshot */
+            color: #1a73e8;
             font-size: 1.8rem;
             font-weight: 700;
-            margin: 10px 0 30px 0;
+            margin: 0 0 30px 0;
             width: 100%;
-            text-align: center;
         }
 
-        /* Stats Layout fix: Fixed widths ensure the centers of the numbers align */
         .stats { 
-            margin-bottom: 5px; 
+            margin-bottom: 20px; 
             display: flex; 
             justify-content: center; 
             gap: 20px; 
@@ -56,20 +55,33 @@
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            width: 120px; /* Fixed width to keep numbers balanced */
+            width: 120px;
         }
         
-        .stat-val { display: block; font-size: 5.5rem; font-weight: 700; color: #000000; line-height: 1; }
+        .stat-val { display: block; font-size: 5.5rem; font-weight: 700; color: #ffffff; line-height: 1; }
         .stat-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-sub); }
-        .strike-val { color: #e74c3c; }
+        .strike-val { color: #ff5252; }
+
+        /* The white/grey panel specifically for the interactive area */
+        .game-panel {
+            background-color: var(--panel-bg);
+            padding: 30px;
+            border-radius: 40px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
 
         .progress-container {
-            width: 80%;
-            max-width: 300px;
-            height: 12px;
+            width: 100%;
+            max-width: 250px;
+            height: 10px;
             background-color: var(--progress-bg);
             border-radius: 10px;
-            margin: 15px 0 25px 0;
+            margin-bottom: 25px;
             overflow: hidden;
         }
 
@@ -80,8 +92,6 @@
             transition: width 0.4s ease;
         }
 
-        .play-area { margin-bottom: 30px; width: 100%; }
-        
         #play-btn {
             background: #2d3436;
             color: white;
@@ -94,34 +104,29 @@
             transition: transform 0.1s;
         }
 
-        #play-btn:active { transform: scale(0.96); }
-
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 20px; 
-            justify-items: center;
-            width: auto;
+            gap: 15px; 
+            margin-top: 25px;
         }
 
         .chord-btn {
-            width: 120px;
-            height: 120px;
-            border-radius: 25px; 
+            width: 100px;
+            height: 100px;
+            border-radius: 20px; 
             cursor: pointer;
-            transition: transform 0.1s, background-color 0.3s, border 0.3s;
-            box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+            transition: transform 0.1s, background-color 0.3s;
             border: 2px solid transparent;
         }
 
         /* Silhouette Styles */
         .chord-btn.locked {
             cursor: not-allowed;
-            box-shadow: none;
             background-color: transparent !important;
             border-width: 2px; 
             border-style: dotted;
-            opacity: 0.6;
+            opacity: 0.5;
         }
 
         .chord-btn.locked.red    { border-color: #ff5252; }
@@ -145,18 +150,19 @@
         .chord-btn:not(.locked).teal   { background-color: #4db6ac; }
         .chord-btn:not(.locked).grey   { background-color: #b0bec5; }
 
-        @media (max-width: 420px) {
-            .chord-btn { width: 100px; height: 100px; }
-            .stat-val { font-size: 4rem; }
-        }
+        #msg { margin-top: 15px; font-size: 1rem; font-weight: 600; color: #636e72; min-height: 1.2rem; }
+        #timer-display { font-weight: 700; color: #e74c3c; margin-top: 5px; font-size: 1.1rem; min-height: 1.2rem;}
 
-        #msg { margin-top: 15px; font-size: 1.1rem; min-height: 1.5rem; font-weight: 500; color: var(--text-sub); }
-        #timer-display { font-weight: 700; color: #e74c3c; margin-top: 5px; font-size: 1.2rem; min-height: 1.5rem;}
+        @media (max-width: 420px) {
+            .chord-btn { width: 85px; height: 85px; }
+            .stat-val { font-size: 4.5rem; }
+        }
     </style>
 </head>
 <body>
 
     <div class="container">
+        <h1>Prodigies-Eguchi</h1>
 
         <div class="stats">
             <div class="stat-group">
@@ -169,26 +175,26 @@
             </div>
         </div>
 
-        <div class="progress-container">
-            <div id="progress-bar" class="progress-bar"></div>
-        </div>
+        <div class="game-panel">
+            <div class="progress-container">
+                <div id="progress-bar" class="progress-bar"></div>
+            </div>
 
-        <div class="play-area">
             <button id="play-btn" onclick="handlePlayButton()">Listen</button>
             <div id="msg">Ready</div>
             <div id="timer-display"></div>
-        </div>
 
-        <div class="grid">
-            <button class="chord-btn red" id="btn-red" onclick="checkAnswer('red')"></button>
-            <button class="chord-btn brown locked" id="btn-brown" onclick="checkAnswer('brown')"></button>
-            <button class="chord-btn pink locked" id="btn-pink" onclick="checkAnswer('pink')"></button>
-            <button class="chord-btn purple locked" id="btn-purple" onclick="checkAnswer('purple')"></button>
-            <button class="chord-btn orange locked" id="btn-orange" onclick="checkAnswer('orange')"></button>
-            <button class="chord-btn yellow locked" id="btn-yellow" onclick="checkAnswer('yellow')"></button>
-            <button class="chord-btn green locked" id="btn-green" onclick="checkAnswer('green')"></button>
-            <button class="chord-btn teal locked" id="btn-teal" onclick="checkAnswer('teal')"></button>
-            <button class="chord-btn grey locked" id="btn-grey" onclick="checkAnswer('grey')"></button>
+            <div class="grid">
+                <button class="chord-btn red" id="btn-red" onclick="checkAnswer('red')"></button>
+                <button class="chord-btn brown locked" id="btn-brown" onclick="checkAnswer('brown')"></button>
+                <button class="chord-btn pink locked" id="btn-pink" onclick="checkAnswer('pink')"></button>
+                <button class="chord-btn purple locked" id="btn-purple" onclick="checkAnswer('purple')"></button>
+                <button class="chord-btn orange locked" id="btn-orange" onclick="checkAnswer('orange')"></button>
+                <button class="chord-btn yellow locked" id="btn-yellow" onclick="checkAnswer('yellow')"></button>
+                <button class="chord-btn green locked" id="btn-green" onclick="checkAnswer('green')"></button>
+                <button class="chord-btn teal locked" id="btn-teal" onclick="checkAnswer('teal')"></button>
+                <button class="chord-btn grey locked" id="btn-grey" onclick="checkAnswer('grey')"></button>
+            </div>
         </div>
     </div>
 
