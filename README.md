@@ -4,11 +4,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Piano Pitch Training</title>
     <style>
+        * { box-sizing: border-box; } /* Prevents padding from shifting elements */
+
         :root {
             --bg-dark: #000000;
             --panel-bg: #f0f2f5;
             --text-main: #ffffff;
-            --text-panel: #000000;
             --text-sub: #a0a0a0;
             --progress-bg: #dfe6e9;
             --progress-fill: #2ecc71;
@@ -23,28 +24,28 @@
             justify-content: center;
             align-items: flex-start;
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         .container {
             width: 100%;
             max-width: 500px;
-            padding: 40px 20px;
+            padding: 20px;
             display: flex;
             flex-direction: column;
             align-items: center;
             text-align: center;
         }
 
-        /* Fixed Centering Logic for Title */
+        /* Centered Title - Single Instance */
         h1 {
             color: #1a73e8;
             font-size: 1.8rem;
             font-weight: 700;
-            margin: 0 0 30px 0;
+            margin: 20px 0;
             padding: 0;
-            width: 100vw; /* Forces the block to the full width of the screen */
-            max-width: 500px;
-            text-align: center; /* Centers text within that block */
+            width: 100%;
+            text-align: center;
             display: block;
         }
 
@@ -75,7 +76,6 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-sizing: border-box;
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
@@ -127,11 +127,11 @@
         .chord-btn.locked {
             cursor: not-allowed;
             background-color: transparent !important;
-            border-width: 2px; 
-            border-style: dotted;
+            border: 2px dotted;
             opacity: 0.5;
         }
 
+        /* Silhouette Border Colors */
         .chord-btn.locked.red    { border-color: #ff5252; }
         .chord-btn.locked.brown  { border-color: #8d6e63; }
         .chord-btn.locked.pink   { border-color: #f48fb1; }
@@ -142,6 +142,7 @@
         .chord-btn.locked.teal   { border-color: #4db6ac; }
         .chord-btn.locked.grey   { border-color: #b0bec5; }
 
+        /* Unlocked Background Colors */
         .chord-btn:not(.locked).red    { background-color: #ff5252; }
         .chord-btn:not(.locked).brown  { background-color: #8d6e63; }
         .chord-btn:not(.locked).pink   { background-color: #f48fb1; }
