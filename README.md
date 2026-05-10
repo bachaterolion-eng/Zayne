@@ -35,12 +35,17 @@
             text-align: center;
         }
 
+        /* Fixed Centering Logic for Title */
         h1 {
             color: #1a73e8;
             font-size: 1.8rem;
             font-weight: 700;
             margin: 0 0 30px 0;
-            width: 100%;
+            padding: 0;
+            width: 100vw; /* Forces the block to the full width of the screen */
+            max-width: 500px;
+            text-align: center; /* Centers text within that block */
+            display: block;
         }
 
         .stats { 
@@ -62,7 +67,6 @@
         .stat-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-sub); }
         .strike-val { color: #ff5252; }
 
-        /* The white/grey panel specifically for the interactive area */
         .game-panel {
             background-color: var(--panel-bg);
             padding: 30px;
@@ -120,7 +124,6 @@
             border: 2px solid transparent;
         }
 
-        /* Silhouette Styles */
         .chord-btn.locked {
             cursor: not-allowed;
             background-color: transparent !important;
@@ -139,7 +142,6 @@
         .chord-btn.locked.teal   { border-color: #4db6ac; }
         .chord-btn.locked.grey   { border-color: #b0bec5; }
 
-        /* Full Color Styles */
         .chord-btn:not(.locked).red    { background-color: #ff5252; }
         .chord-btn:not(.locked).brown  { background-color: #8d6e63; }
         .chord-btn:not(.locked).pink   { background-color: #f48fb1; }
@@ -162,7 +164,7 @@
 <body>
 
     <div class="container">
-
+        <h1>Prodigies-Eguchi</h1>
 
         <div class="stats">
             <div class="stat-group">
