@@ -1,3 +1,4 @@
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -33,8 +34,21 @@
             text-align: center;
         }
 
-        .stats { margin-bottom: 5px; display: flex; gap: 40px; }
-        .stat-group { display: flex; flex-direction: column; }
+        /* Updated Stats Layout to keep things centered */
+        .stats { 
+            margin-bottom: 5px; 
+            display: flex; 
+            justify-content: center; 
+            gap: 50px; 
+            width: 100%;
+        }
+        
+        .stat-group { 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+        }
+        
         .stat-val { display: block; font-size: 5.5rem; font-weight: 700; color: #000000; line-height: 1; }
         .stat-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 2px; color: var(--text-sub); }
         .strike-val { color: #e74c3c; }
@@ -197,7 +211,7 @@
         }
 
         function startTimer() {
-            if (isTimerRunning) return; // Don't reset if already running
+            if (isTimerRunning) return; 
             
             isTimerRunning = true;
             timeLeft = 10;
@@ -245,7 +259,7 @@
             if (!currentTarget) {
                 const available = progression.slice(0, activeCount);
                 currentTarget = available[Math.floor(Math.random() * available.length)];
-                startTimer(); // Only start a fresh timer if it's a new target
+                startTimer(); 
             }
             playSound(currentTarget);
             document.getElementById('msg').innerText = "Listen closely...";
