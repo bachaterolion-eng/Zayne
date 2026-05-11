@@ -1,4 +1,3 @@
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -16,112 +15,79 @@
         }
 
         body {
-            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            font-family: 'Segoe UI', Roboto, Arial, sans-serif;
             background-color: var(--bg-dark);
             color: var(--text-main);
             margin: 0;
             display: flex;
             justify-content: center;
-            align-items: flex-start;
-            min-height: 100vh;
-        }
-
-        .container {
-            width: 100%;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             padding: 20px;
         }
 
-        h1 {
-            color: #1a73e8;
-            font-size: 1.8rem;
-            font-weight: 700;
-            margin: 20px 0;
-            text-align: center;
-            width: 100%;
-        }
+        .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
 
-        .stats { 
-            margin-bottom: 20px; 
-            display: flex; 
-            justify-content: center; 
-            gap: 20px; 
-        }
-        
-        .stat-group { display: flex; flex-direction: column; align-items: center; width: 120px; }
-        .stat-val { font-size: 5.5rem; font-weight: 700; color: #ffffff; line-height: 1; }
-        .stat-label { font-size: 0.85rem; text-transform: uppercase; color: var(--text-sub); }
+        h1 { color: #1a73e8; font-size: 1.8rem; text-align: center; margin-bottom: 10px; width: 100%; }
+
+        .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
+        .stat-group { display: flex; flex-direction: column; align-items: center; }
+        .stat-val { font-size: 5rem; font-weight: 800; line-height: 1; }
+        .stat-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; }
 
         .game-panel {
             background-color: var(--panel-bg);
-            padding: 30px;
+            padding: 25px;
             border-radius: 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            width: 100%;
         }
 
         .progress-container {
             width: 100%;
-            height: 10px;
+            height: 12px;
             background-color: var(--progress-bg);
             border-radius: 10px;
-            margin-bottom: 25px;
+            margin-bottom: 20px;
             overflow: hidden;
         }
+        .progress-bar { height: 100%; width: 0%; background-color: var(--progress-fill); transition: width 0.3s; }
 
-        .progress-bar { height: 100%; width: 0%; background-color: var(--progress-fill); transition: width 0.4s; }
-
-        #play-btn {
+        #play-btn, #replay-btn {
             background: #2d3436;
             color: white;
             border: none;
-            padding: 12px 45px; 
+            padding: 12px 30px; 
             border-radius: 40px;
-            font-size: 1.1rem;
+            font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
+            margin-bottom: 10px;
         }
+        #replay-btn { background: #1a73e8; display: none; }
 
         .grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 15px; 
-            margin-top: 25px;
+            gap: 12px;
+            margin-top: 20px;
         }
 
         .chord-btn {
-            width: 100px;
-            height: 100px;
-            border-radius: 24px; 
-            cursor: pointer;
+            width: 95px;
+            height: 95px;
+            border-radius: 20px;
             border: none;
+            cursor: pointer;
+            font-size: 3.2rem;
             display: flex;
             align-items: center;
             justify-content: center;
             transition: transform 0.1s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        .chord-btn svg {
-            width: 65%;
-            height: 65%;
-            fill: white; /* This makes the animal white on the colored background */
-        }
-
-        /* Locked / Shadow Square State */
-        .chord-btn.locked {
-            background-color: rgba(0, 0, 0, 0.05) !important;
-            cursor: not-allowed;
-            box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
-        }
-
-        .chord-btn.locked svg {
-            display: none; /* Hide the animal until unlocked */
-        }
-
-        /* Level Colors */
+        /* Color Assignments */
         .red { background-color: #ff5252; }
         .brown { background-color: #8d6e63; }
         .pink { background-color: #f48fb1; }
@@ -132,112 +98,147 @@
         .teal { background-color: #4db6ac; }
         .grey { background-color: #b0bec5; }
 
-        #msg { margin-top: 15px; font-weight: 600; color: #636e72; text-align: center; }
+        /* The Tint Trick: Making emojis match the square color */
+        /* Note: Filters work slightly differently across devices, but this forces a strong color shift */
+        .red span { filter: drop-shadow(0 0 0 #ff5252) contrast(1.5) sepia(1) hue-rotate(-50deg) saturate(5); }
+        .green span { filter: drop-shadow(0 0 0 #81c784) sepia(1) hue-rotate(60deg) saturate(3); }
+        .pink span { filter: drop-shadow(0 0 0 #f48fb1) contrast(0.8) brightness(1.2); }
+
+        /* Locked / Shadow Square */
+        .chord-btn.locked {
+            background-color: rgba(0, 0, 0, 0.05) !important;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
+            cursor: not-allowed;
+        }
+        .chord-btn.locked span { display: none; }
+
+        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <h1>PRODIGIES-EGUCHI</h1>
+<div class="container">
+    <h1>PRODIGIES-EGUCHI</h1>
 
-        <div class="stats">
-            <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
-            <div class="stat-group"><span id="strikes" class="stat-val" style="color:#ff5252">0</span><span class="stat-label">Strikes</span></div>
-        </div>
-
-        <div class="game-panel">
-            <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
-            <button id="play-btn" onclick="startRound()">Start Level</button>
-            <div id="msg">Practice Mode: Tap animals to learn</div>
-
-            <div class="grid">
-                <button class="chord-btn red" id="btn-red" onclick="handleInput('red')">
-                    <svg viewBox="0 0 24 24"><path d="M12,8L10.67,8.09C9.81,7.07 7.4,4.5 5,4.5C5,4.5 3.03,7.46 4.96,11.41C4.41,12.24 4.07,12.67 4,13.66C4,13.66 2,13.66 2,15.66C2,17.66 4,17.66 4,17.66C4,17.66 4,20.66 6,20.66C8,20.66 12,20.66 12,20.66C12,20.66 16,20.66 18,20.66C20,20.66 20,17.66 20,17.66C20,17.66 22,17.66 22,15.66C22,13.66 20,13.66 20,13.66C19.93,12.67 19.59,12.24 19.04,11.41C20.97,7.46 19,4.5 19,4.5C16.6,4.5 14.19,7.07 13.33,8.09L12,8Z"/></svg>
-                </button>
-                <button class="chord-btn brown" id="btn-brown" onclick="handleInput('brown')">
-                    <svg viewBox="0 0 24 24"><path d="M18.5,2C17.12,2 16,3.12 16,4.5C16,4.91 16.1,5.3 16.27,5.64C15.04,5.23 13.61,5 12,5C10.39,5 8.96,5.23 7.73,5.64C7.9,5.3 8,4.91 8,4.5C8,3.12 6.88,2 5.5,2C4.12,2 3,3.12 3,4.5C3,5.74 3.9,6.77 5.09,6.97C5.03,7.31 5,7.65 5,8C5,13 9,15 12,15C15,15 19,13 19,8C19,7.65 18.97,7.31 18.91,6.97C20.1,6.77 21,5.74 21,4.5C21,3.12 19.88,2 18.5,2Z"/></svg>
-                </button>
-                <button class="chord-btn pink locked" id="btn-pink" onclick="handleInput('pink')">
-                    <svg viewBox="0 0 24 24"><path d="M12,2C6.48,2 2,6.48 2,12C2,17.52 6.48,22 12,22C17.52,22 22,17.52 22,12C22,6.48 17.52,2 12,2M12,19C9.24,19 7,16.76 7,14C7,11.24 9.24,9 12,9C14.76,9 17,11.24 17,14C17,16.76 14.76,19 12,19M10,13A1,1 0 0,1 11,14A1,1 0 0,1 10,15A1,1 0 0,1 9,14A1,1 0 0,1 10,13M14,13A1,1 0 0,1 15,14A1,1 0 0,1 14,15A1,1 0 0,1 13,14A1,1 0 0,1 14,13Z"/></svg>
-                </button>
-                <button class="chord-btn purple locked" id="btn-purple" onclick="handleInput('purple')">
-                    <svg viewBox="0 0 24 24"><path d="M12,2C6.5,2 2,6.5 2,12C2,17.5 6.5,22 12,22C17.5,22 22,17.5 22,12C22,6.5 17.5,2 12,2M7.5,10.5C8.3,10.5 9,11.2 9,12C9,12.8 8.3,13.5 7.5,13.5C6.7,13.5 6,12.8 6,12C6,11.2 6.7,10.5 7.5,10.5M12,18C10,18 8.3,16.7 7.4,15H16.6C15.7,16.7 14,18 12,18M16.5,13.5C15.7,13.5 15,12.8 15,12C15,11.2 15.7,10.5 16.5,10.5C17.3,10.5 18,11.2 18,12C18,12.8 17.3,13.5 16.5,13.5Z"/></svg>
-                </button>
-                <button class="chord-btn orange locked" id="btn-orange" onclick="handleInput('orange')"></button>
-                <button class="chord-btn yellow locked" id="btn-yellow" onclick="handleInput('yellow')"></button>
-                <button class="chord-btn green locked" id="btn-green" onclick="handleInput('green')"></button>
-                <button class="chord-btn teal locked" id="btn-teal" onclick="handleInput('teal')"></button>
-                <button class="chord-btn grey locked" id="btn-grey" onclick="handleInput('grey')"></button>
-            </div>
-        </div>
+    <div class="stats">
+        <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
+        <div class="stat-group"><span id="strikes" class="stat-val" style="color:#ff5252">0</span><span class="stat-label">Strikes</span></div>
     </div>
 
-    <script>
-        const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey'];
-        let activeCount = 2; // Starts on Red & Brown
-        let streak = 0;
-        let strikes = 0;
-        let currentTarget = null;
-        let isGameActive = false;
+    <div class="game-panel">
+        <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
+        
+        <button id="play-btn" onclick="startRound()">Start Level</button>
+        <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
+        <div id="msg">Practice Mode: Tap animals to learn</div>
 
-        function startRound() {
-            isGameActive = true;
-            document.getElementById('play-btn').style.display = "none";
-            nextQuestion();
+        <div class="grid">
+            <button class="chord-btn red" id="btn-red" onclick="handleInput('red')"><span>🐱</span></button>
+            <button class="chord-btn brown" id="btn-brown" onclick="handleInput('brown')"><span>🐻</span></button>
+            <button class="chord-btn pink locked" id="btn-pink" onclick="handleInput('pink')"><span>🐷</span></button>
+            <button class="chord-btn purple locked" id="btn-purple" onclick="handleInput('purple')"><span>👾</span></button>
+            <button class="chord-btn orange locked" id="btn-orange" onclick="handleInput('orange')"><span>🦊</span></button>
+            <button class="chord-btn yellow locked" id="btn-yellow" onclick="handleInput('yellow')"><span>🐥</span></button>
+            <button class="chord-btn green locked" id="btn-green" onclick="handleInput('green')"><span>🐸</span></button>
+            <button class="chord-btn teal locked" id="btn-teal" onclick="handleInput('teal')"><span>🐢</span></button>
+            <button class="chord-btn grey locked" id="btn-grey" onclick="handleInput('grey')"><span>🐘</span></button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const soundBuffers = {};
+    const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey'];
+    
+    let activeCount = 2; 
+    let streak = 0;
+    let strikes = 0;
+    let currentTarget = null;
+    let isGameActive = false;
+
+    async function loadSound(name) {
+        try {
+            const response = await fetch(`${name}.wav`);
+            const arrayBuffer = await response.arrayBuffer();
+            soundBuffers[name] = await audioCtx.decodeAudioData(arrayBuffer);
+        } catch (e) { console.log("Sound load failed for " + name); }
+    }
+    progression.forEach(loadSound);
+
+    function playSound(name) {
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+        if (!soundBuffers[name]) return;
+        const source = audioCtx.createBufferSource();
+        source.buffer = soundBuffers[name];
+        source.connect(audioCtx.destination);
+        source.start(0);
+    }
+
+    function replaySound() { if (currentTarget) playSound(currentTarget); }
+
+    function startRound() {
+        isGameActive = true;
+        document.getElementById('play-btn').style.display = "none";
+        document.getElementById('replay-btn').style.display = "block";
+        nextQuestion();
+    }
+
+    function nextQuestion() {
+        const available = progression.slice(0, activeCount);
+        currentTarget = available[Math.floor(Math.random() * available.length)];
+        playSound(currentTarget);
+        document.getElementById('msg').innerText = "Which animal is singing?";
+    }
+
+    function handleInput(choice) {
+        if (document.getElementById(`btn-${choice}`).classList.contains('locked')) return;
+
+        if (!isGameActive) {
+            playSound(choice);
+            return;
         }
 
-        function nextQuestion() {
-            const available = progression.slice(0, activeCount);
-            currentTarget = available[Math.floor(Math.random() * available.length)];
-            // playSound(currentTarget); // Logic placeholder
-            document.getElementById('msg').innerText = "Listen closely...";
-        }
-
-        function handleInput(choice) {
-            const btn = document.getElementById(`btn-${choice}`);
-            if (btn.classList.contains('locked')) return;
-
-            if (!isGameActive) {
-                // playSound(choice); // Practice tap
-                return;
-            }
-
-            if (choice === currentTarget) {
-                streak++;
-                document.getElementById('msg').innerText = "Correct!";
-                if (streak >= 10 && activeCount < progression.length) {
-                    activeCount++;
-                    streak = 0;
-                    updateUI();
-                    isGameActive = false;
-                    document.getElementById('play-btn').style.display = "block";
-                } else {
-                    updateUI();
-                    setTimeout(nextQuestion, 800);
-                }
-            } else {
-                strikes++;
+        if (choice === currentTarget) {
+            streak++;
+            document.getElementById('msg').innerText = "Correct! ✨";
+            if (streak >= 10 && activeCount < progression.length) {
+                activeCount++;
                 streak = 0;
                 updateUI();
-                if (strikes >= 3) {
-                    alert("Game Over! Restarting.");
-                    location.reload();
-                }
+                isGameActive = false;
+                document.getElementById('play-btn').style.display = "block";
+                document.getElementById('replay-btn').style.display = "none";
+                document.getElementById('msg').innerText = "New animal unlocked! Practice it.";
+            } else {
+                updateUI();
+                setTimeout(nextQuestion, 1000);
+            }
+        } else {
+            strikes++;
+            streak = 0;
+            document.getElementById('msg').innerText = "Try again!";
+            updateUI();
+            if (strikes >= 3) {
+                alert("Restarting level...");
+                strikes = 0;
+                activeCount = 2;
+                updateUI();
             }
         }
+    }
 
-        function updateUI() {
-            document.getElementById('streak').innerText = streak;
-            document.getElementById('strikes').innerText = strikes;
-            document.getElementById('progress-bar').style.width = (streak * 10) + "%";
-            progression.forEach((color, i) => {
-                const b = document.getElementById(`btn-${color}`);
-                if (i < activeCount) b.classList.remove('locked');
-                else b.classList.add('locked');
-            });
-        }
-    </script>
+    function updateUI() {
+        document.getElementById('streak').innerText = streak;
+        document.getElementById('strikes').innerText = strikes;
+        document.getElementById('progress-bar').style.width = (streak * 10) + "%";
+        progression.forEach((color, i) => {
+            const btn = document.getElementById(`btn-${color}`);
+            if (i < activeCount) btn.classList.remove('locked');
+            else btn.classList.add('locked');
+        });
+    }
+</script>
+
 </body>
 </html>
-
-```
