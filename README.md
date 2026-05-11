@@ -1,4 +1,3 @@
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -14,8 +13,6 @@
             --text-sub: #a0a0a0;
             --progress-bg: #dfe6e9;
             --progress-fill: #2ecc71;
-            /* Simple shades for visibility within the colored squares */
-            --shade-invisible: rgba(0,0,0,0);
         }
 
         body {
@@ -135,18 +132,21 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 15px;
-            /* Emojis aren't used anymore, so this isn't necessary, but left in. */
-            font-size: 50px; 
-            line-height: 1;
+            position: relative;
+            overflow: hidden;
         }
 
-        /* SVG styling for shapes to adopt button hue */
-        .chord-btn svg {
-            width: 100%;
-            height: 100%;
-            /* Sets fill to the hue of the button background */
-            fill: currentColor; 
+        /* The silhouette shape inside the button */
+        .shape {
+            width: 60px;
+            height: 60px;
+            background-color: white; /* This makes the white silhouette on the color */
+            mask-size: contain;
+            mask-repeat: no-repeat;
+            mask-position: center;
+            -webkit-mask-size: contain;
+            -webkit-mask-repeat: no-repeat;
+            -webkit-mask-position: center;
         }
 
         .chord-btn.locked {
@@ -154,19 +154,33 @@
             background-color: rgba(0, 0, 0, 0.05) !important;
             box-shadow: inset 0 2px 8px rgba(0,0,0,0.05);
             opacity: 1;
-            /* Shape adopts the shadow hue when locked */
-            color: rgba(0, 0, 0, 0.1); 
         }
 
-        .red    { background-color: #ff5252; color: #ff5252; }
-        .brown  { background-color: #8d6e63; color: #8d6e63; }
-        .pink   { background-color: #f48fb1; color: #f48fb1; }
-        .purple { background-color: #ba68c8; color: #ba68c8; }
-        .orange { background-color: #ffb74d; color: #ffb74d; }
-        .yellow { background-color: #fff176; color: #fff176; }
-        .green  { background-color: #81c784; color: #81c784; }
-        .teal   { background-color: #4db6ac; color: #4db6ac; }
-        .grey   { background-color: #b0bec5; color: #b0bec5; }
+        /* Hide shape entirely when locked, showing just the shadow square */
+        .locked .shape {
+            display: none;
+        }
+
+        .red    { background-color: #ff5252; }
+        .brown  { background-color: #8d6e63; }
+        .pink   { background-color: #f48fb1; }
+        .purple { background-color: #ba68c8; }
+        .orange { background-color: #ffb74d; }
+        .yellow { background-color: #fff176; }
+        .green  { background-color: #81c784; }
+        .teal   { background-color: #4db6ac; }
+        .grey   { background-color: #b0bec5; }
+
+        /* Assigning shapes using clip-paths for perfect color matching */
+        .red .shape    { clip-path: path('M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z'); transform: scale(2.5); }
+        .brown .shape  { border-radius: 50%; width: 50px; height: 50px; } /* Circle/Bear head */
+        .pink .shape   { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); } /* Star/Piggy */
+        .purple .shape { clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%); } /* Diamond */
+        .orange .shape { clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%); }
+        .yellow .shape { border-radius: 50%; box-shadow: 0 0 0 10px white inset; border: 5px dashed white; }
+        .green .shape  { clip-path: polygon(20% 0%, 80% 0%, 100% 20%, 100% 80%, 80% 100%, 20% 100%, 0% 80%, 0% 20%); }
+        .teal .shape   { clip-path: polygon(25% 5%, 75% 5%, 100% 50%, 75% 95%, 25% 95%, 0% 50%); }
+        .grey .shape   { border-radius: 50px 50px 10px 10px; width: 70px; }
 
         #msg { margin-top: 15px; font-size: 1rem; font-weight: 600; color: #636e72; min-height: 1.2rem; text-align: center;}
         #timer-display { font-weight: 700; color: #e74c3c; margin-top: 5px; font-size: 1.1rem; min-height: 1.2rem;}
@@ -194,38 +208,20 @@
             </div>
 
             <button id="play-btn" onclick="startRound()">Start Level</button>
-            <div id="msg">Practice Mode: Tap the squares to learn them</div>
+            <div id="msg">Practice Mode: Tap the squares to hear the sounds</div>
             <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
             <div id="timer-display"></div>
 
             <div class="grid">
-                <button class="chord-btn red" id="btn-red" onclick="handleInput('red')">
-                    <svg viewBox="0 0 512 512"><path d="M432.1 369.3c16 8 32 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1z"/></svg>
-                </button>
-                <button class="chord-btn brown locked" id="btn-brown" onclick="handleInput('brown')">
-                    <svg viewBox="0 0 512 512"><path d="M432.1 369.3c16 8 32 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1z"/></svg>
-                </button>
-                <button class="chord-btn pink locked" id="btn-pink" onclick="handleInput('pink')">
-                    <svg viewBox="0 0 512 512"><path d="M432.1 369.3c16 8 32 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1z"/></svg>
-                </button>
-                <button class="chord-btn purple locked" id="btn-purple" onclick="handleInput('purple')">
-                    <svg viewBox="0 0 512 512"><path d="M432.1 369.3c16 8 32 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1z"/></svg>
-                </button>
-                <button class="chord-btn orange locked" id="btn-orange" onclick="handleInput('orange')">
-                    <svg viewBox="0 0 512 512"><path d="M432.1 369.3c16 8 32 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1z"/></svg>
-                </button>
-                <button class="chord-btn yellow locked" id="btn-yellow" onclick="handleInput('yellow')">
-                    <svg viewBox="0 0 512 512"><path d="M432.1 369.3c16 8 32 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1z"/></svg>
-                </button>
-                <button class="chord-btn green locked" id="btn-green" onclick="handleInput('green')">
-                    <svg viewBox="0 0 512 512"><path d="M432.1 369.3c16 8 32 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1z"/></svg>
-                </button>
-                <button class="chord-btn teal locked" id="btn-teal" onclick="handleInput('teal')">
-                    <svg viewBox="0 0 512 512"><path d="M432.1 369.3c16 8 32 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1z"/></svg>
-                </button>
-                <button class="chord-btn grey locked" id="btn-grey" onclick="handleInput('grey')">
-                    <svg viewBox="0 0 512 512"><path d="M432.1 369.3c16 8 32 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1c16.1 8 32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1s32.1 16.1 48.1 24.1z"/></svg>
-                </button>
+                <button class="chord-btn red" id="btn-red" onclick="handleInput('red')"><div class="shape"></div></button>
+                <button class="chord-btn brown" id="btn-brown" onclick="handleInput('brown')"><div class="shape"></div></button>
+                <button class="chord-btn pink locked" id="btn-pink" onclick="handleInput('pink')"><div class="shape"></div></button>
+                <button class="chord-btn purple locked" id="btn-purple" onclick="handleInput('purple')"><div class="shape"></div></button>
+                <button class="chord-btn orange locked" id="btn-orange" onclick="handleInput('orange')"><div class="shape"></div></button>
+                <button class="chord-btn yellow locked" id="btn-yellow" onclick="handleInput('yellow')"><div class="shape"></div></button>
+                <button class="chord-btn green locked" id="btn-green" onclick="handleInput('green')"><div class="shape"></div></button>
+                <button class="chord-btn teal locked" id="btn-teal" onclick="handleInput('teal')"><div class="shape"></div></button>
+                <button class="chord-btn grey locked" id="btn-grey" onclick="handleInput('grey')"><div class="shape"></div></button>
             </div>
         </div>
     </div>
@@ -268,59 +264,6 @@
             if (currentTarget) playSound(currentTarget);
         }
 
-        function startTimer() {
-            clearInterval(timerInterval);
-            timeLeft = 10;
-            updateTimerUI();
-            timerInterval = setInterval(() => {
-                timeLeft--;
-                updateTimerUI();
-                if (timeLeft <= 0) {
-                    stopTimer();
-                    handleMistake("Time's up!");
-                }
-            }, 1000);
-        }
-
-        function stopTimer() {
-            clearInterval(timerInterval);
-            document.getElementById('timer-display').innerText = "";
-        }
-
-        function updateTimerUI() {
-            document.getElementById('timer-display').innerText = timeLeft > 0 ? `Time: ${timeLeft}s` : "";
-        }
-
-        function handleMistake(message) {
-            strikes++;
-            streak = 0;
-            currentTarget = null;
-            isGameActive = false;
-            document.getElementById('replay-btn').style.display = "none";
-            
-            if (strikes >= 3) {
-                alert("3 Strikes! Back to Level 1.");
-                strikes = 0;
-                activeCount = 2;
-                enterPracticeMode("Back to basics. Practice then start.");
-            } else {
-                document.getElementById('msg').innerText = message;
-                document.getElementById('msg').style.color = "#e74c3c";
-                setTimeout(nextQuestion, 1500);
-            }
-            updateUI();
-        }
-
-        function enterPracticeMode(message) {
-            isGameActive = false;
-            canPractice = true;
-            document.getElementById('play-btn').style.display = "block";
-            document.getElementById('replay-btn').style.display = "none";
-            document.getElementById('msg').innerText = message;
-            document.getElementById('msg').style.color = "#636e72";
-            stopTimer();
-        }
-
         function startRound() {
             canPractice = false;
             document.getElementById('play-btn').style.display = "none";
@@ -333,7 +276,7 @@
             currentTarget = available[Math.floor(Math.random() * available.length)];
             
             playSound(currentTarget);
-            document.getElementById('msg').innerText = "Identify the sound...";
+            document.getElementById('msg').innerText = "Which one made the sound?";
             document.getElementById('msg').style.color = "#636e72";
             document.getElementById('replay-btn').style.display = "block";
             startTimer();
@@ -367,15 +310,64 @@
                     activeCount++;
                     streak = 0;
                     updateUI();
-                    enterPracticeMode("New square unlocked! Practice then start.");
+                    enterPracticeMode("New level unlocked! Practice first.");
                 } else {
                     updateUI();
                     setTimeout(nextQuestion, 1000);
                 }
             } else {
                 stopTimer();
-                handleMistake("Wrong choice!");
+                handleMistake("Try again!");
             }
+        }
+
+        function enterPracticeMode(message) {
+            isGameActive = false;
+            canPractice = true;
+            document.getElementById('play-btn').style.display = "block";
+            document.getElementById('replay-btn').style.display = "none";
+            document.getElementById('msg').innerText = message;
+            document.getElementById('msg').style.color = "#636e72";
+            stopTimer();
+        }
+
+        function handleMistake(message) {
+            strikes++;
+            streak = 0;
+            currentTarget = null;
+            isGameActive = false;
+            document.getElementById('replay-btn').style.display = "none";
+            
+            if (strikes >= 3) {
+                alert("3 Strikes! Starting over.");
+                strikes = 0;
+                activeCount = 2;
+                enterPracticeMode("Back to basics.");
+            } else {
+                document.getElementById('msg').innerText = message;
+                document.getElementById('msg').style.color = "#e74c3c";
+                setTimeout(nextQuestion, 1500);
+            }
+            updateUI();
+        }
+
+        function stopTimer() {
+            clearInterval(timerInterval);
+            document.getElementById('timer-display').innerText = "";
+        }
+
+        function startTimer() {
+            clearInterval(timerInterval);
+            timeLeft = 10;
+            document.getElementById('timer-display').innerText = `Time: ${timeLeft}s`;
+            timerInterval = setInterval(() => {
+                timeLeft--;
+                document.getElementById('timer-display').innerText = `Time: ${timeLeft}s`;
+                if (timeLeft <= 0) {
+                    stopTimer();
+                    handleMistake("Time's up!");
+                }
+            }, 1000);
         }
 
         function updateUI() {
@@ -397,5 +389,3 @@
     </script>
 </body>
 </html>
-
-```
