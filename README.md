@@ -142,7 +142,7 @@
             <button class="chord-btn orange locked" id="btn-orange" onclick="handleInput('orange')">🦊</button>
             <button class="chord-btn yellow locked" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
             <button class="chord-btn green locked" id="btn-green" onclick="handleInput('green')">🐸</button>
-            <button class="chord-btn teal locked" id="btn-teal" onclick="handleInput('teal')">🐢</button>
+            <button class="chord-btn teal locked" id="btn-teal" onclick="handleInput('teal')">🐬</button>
             <button class="chord-btn grey locked" id="btn-grey" onclick="handleInput('grey')">🐘</button>
         </div>
     </div>
