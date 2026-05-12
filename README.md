@@ -1,3 +1,4 @@
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -27,7 +28,21 @@
 
         .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
 
-        h1 { color: #1a73e8; font-size: 1.8rem; text-align: center; margin-bottom: 10px; width: 100%; }
+        h1 { 
+            color: #1a73e8; 
+            font-size: 1.8rem; 
+            text-align: center; 
+            margin: 0 0 10px 0; 
+            width: 100%; 
+        }
+
+        .header-line {
+            width: 100%;
+            height: 1px;
+            background: #ffffff;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
 
         .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
         .stat-group { display: flex; flex-direction: column; align-items: center; }
@@ -106,10 +121,12 @@
         .teal { background-color: #4db6ac; }
         .grey { background-color: #b0bec5; }
 
+        /* Strictly hides BOTH background and emoji until active */
         .chord-btn.locked {
             background-color: rgba(0, 0, 0, 0.05) !important;
+            color: transparent !important;
             cursor: not-allowed;
-            color: transparent;
+            box-shadow: none;
         }
 
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; }
@@ -118,6 +135,7 @@
 <body>
 
 <div class="container">
+
     
 
     <div class="stats">
@@ -127,9 +145,8 @@
 
     <div class="game-panel">
         <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
-        
         <div id="timer-text"></div>
-
+        
         <button id="play-btn" onclick="startRound()">Start Level</button>
         <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
         <div id="msg">Practice Mode: Tap animals to learn</div>
@@ -182,7 +199,7 @@
     function replaySound() { 
         if (currentTarget) {
             playSound(currentTarget);
-            resetTimer(); // Reset the 10s if they choose to replay
+            resetTimer();
         }
     }
 
@@ -192,9 +209,7 @@
         timerInterval = setInterval(() => {
             timeLeft--;
             document.getElementById('timer-text').innerText = `Time: ${timeLeft}s`;
-            if (timeLeft <= 0) {
-                handleTimeout();
-            }
+            if (timeLeft <= 0) handleTimeout();
         }, 1000);
     }
 
@@ -230,7 +245,8 @@
     }
 
     function handleInput(choice) {
-        if (document.getElementById(`btn-${choice}`).classList.contains('locked')) return;
+        const btn = document.getElementById(`btn-${choice}`);
+        if (btn.classList.contains('locked')) return;
 
         if (!isGameActive) {
             playSound(choice);
@@ -241,7 +257,8 @@
             stopTimer();
             streak++;
             document.getElementById('msg').innerText = "Correct! ✨";
-            if (streak >= 10 && activeCount < progression.length) {
+            
+            if (streak >= 20 && activeCount < progression.length) {
                 activeCount++;
                 streak = 0;
                 updateUI();
@@ -275,13 +292,21 @@
     function updateUI() {
         document.getElementById('streak').innerText = streak;
         document.getElementById('strikes').innerText = strikes;
-        document.getElementById('progress-bar').style.width = (streak * 10) + "%";
+        document.getElementById('progress-bar').style.width = (streak * 5) + "%";
+        
         progression.forEach((color, i) => {
             const btn = document.getElementById(`btn-${color}`);
-            if (i < activeCount) btn.classList.remove('locked');
-            else btn.classList.add('locked');
+            if (i < activeCount) {
+                btn.classList.remove('locked');
+            } else {
+                btn.classList.add('locked');
+            }
         });
     }
+
+    // Set initial state
+    updateUI();
 </script>
 </body>
 </html>
+
