@@ -109,24 +109,30 @@
             justify-content: center;
             transition: transform 0.1s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background-color: rgba(0, 0, 0, 0.05); /* Default grey for locked */
+            color: transparent; /* Default hidden text */
         }
 
-        .red { background-color: #ff5252; }
-        .brown { background-color: #8d6e63; }
-        .pink { background-color: #f48fb1; }
-        .purple { background-color: #ba68c8; }
-        .orange { background-color: #ffb74d; }
-        .yellow { background-color: #fff176; }
-        .green { background-color: #81c784; }
-        .teal { background-color: #4db6ac; }
-        .grey { background-color: #b0bec5; }
+        /* Active Levels - Colors and Emojis show up ONLY here */
+        .chord-btn.active.red { background-color: #ff5252; color: white; }
+        .chord-btn.active.brown { background-color: #8d6e63; color: white; }
+        .chord-btn.active.pink { background-color: #f48fb1; color: white; }
+        .chord-btn.active.purple { background-color: #ba68c8; color: white; }
+        .chord-btn.active.orange { background-color: #ffb74d; color: white; }
+        .chord-btn.active.yellow { background-color: #fff176; color: white; }
+        .chord-btn.active.green { background-color: #81c784; color: white; }
+        .chord-btn.active.teal { background-color: #4db6ac; color: white; }
+        .chord-btn.active.grey-note { background-color: #b0bec5; color: white; }
 
-        /* Strictly hides BOTH background and emoji until active */
-        .chord-btn.locked {
-            background-color: rgba(0, 0, 0, 0.05) !important;
-            color: transparent !important;
-            cursor: not-allowed;
-            box-shadow: none;
+        .chord-btn img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+            display: none; /* Hidden by default */
+        }
+
+        .chord-btn.active img {
+            display: block; /* Shown only when active */
         }
 
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; }
@@ -135,8 +141,8 @@
 <body>
 
 <div class="container">
-
-    
+    <h1>PRODIGIES-EGUCHI</h1>
+    <div class="header-line"></div>
 
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
@@ -154,13 +160,15 @@
         <div class="grid">
             <button class="chord-btn red" id="btn-red" onclick="handleInput('red')">🦞</button>
             <button class="chord-btn brown" id="btn-brown" onclick="handleInput('brown')">🐻</button>
-            <button class="chord-btn pink locked" id="btn-pink" onclick="handleInput('pink')">🐷</button>
-            <button class="chord-btn purple locked" id="btn-purple" onclick="handleInput('purple')">😈</button>
-            <button class="chord-btn orange locked" id="btn-orange" onclick="handleInput('orange')">🦊</button>
-            <button class="chord-btn yellow locked" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
-            <button class="chord-btn green locked" id="btn-green" onclick="handleInput('green')">🐸</button>
-            <button class="chord-btn teal locked" id="btn-teal" onclick="handleInput('teal')">🐬</button>
-            <button class="chord-btn grey locked" id="btn-grey" onclick="handleInput('grey')">🐘</button>
+            <button class="chord-btn pink" id="btn-pink" onclick="handleInput('pink')">🐷</button>
+            <button class="chord-btn purple" id="btn-purple" onclick="handleInput('purple')">
+                <img src="image_5.png" alt="Octopus">
+            </button>
+            <button class="chord-btn orange" id="btn-orange" onclick="handleInput('orange')"> foxes </button>
+            <button class="chord-btn yellow" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
+            <button class="chord-btn green" id="btn-green" onclick="handleInput('green')">🐸</button>
+            <button class="chord-btn teal" id="btn-teal" onclick="handleInput('teal')">🐬</button>
+            <button class="chord-btn grey-note" id="btn-grey" onclick="handleInput('grey')">🐘</button>
         </div>
     </div>
 </div>
@@ -245,8 +253,8 @@
     }
 
     function handleInput(choice) {
-        const btn = document.getElementById(`btn-${choice}`);
-        if (btn.classList.contains('locked')) return;
+        const btn = document.getElementById(`btn-${choice === 'grey' ? 'grey' : choice}`);
+        if (!btn.classList.contains('active')) return;
 
         if (!isGameActive) {
             playSound(choice);
@@ -295,19 +303,18 @@
         document.getElementById('progress-bar').style.width = (streak * 5) + "%";
         
         progression.forEach((color, i) => {
-            const btn = document.getElementById(`btn-${color}`);
+            const btnId = color === 'grey' ? 'btn-grey' : `btn-${color}`;
+            const btn = document.getElementById(btnId);
             if (i < activeCount) {
-                btn.classList.remove('locked');
+                btn.classList.add('active');
             } else {
-                btn.classList.add('locked');
+                btn.classList.remove('active');
             }
         });
     }
 
-    // Set initial state
     updateUI();
 </script>
 </body>
 </html>
-
 
