@@ -12,6 +12,7 @@
             --text-sub: #a0a0a0;
             --progress-bg: #dfe6e9;
             --progress-fill: #2ecc71;
+            --timer-color: #e74c3c;
         }
 
         body {
@@ -48,10 +49,18 @@
             height: 12px;
             background-color: var(--progress-bg);
             border-radius: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             overflow: hidden;
         }
         .progress-bar { height: 100%; width: 0%; background-color: var(--progress-fill); transition: width 0.3s; }
+
+        #timer-text {
+            font-size: 1.2rem;
+            font-weight: 800;
+            color: var(--timer-color);
+            margin-bottom: 10px;
+            height: 1.5rem;
+        }
 
         #play-btn, #replay-btn {
             background: #2d3436;
@@ -70,7 +79,7 @@
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 12px;
-            margin-top: 20px;
+            margin-top: 10px;
         }
 
         .chord-btn {
@@ -79,7 +88,7 @@
             border-radius: 20px;
             border: none;
             cursor: pointer;
-            font-size: 3.5rem; /* Large emoji size */
+            font-size: 3.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -87,7 +96,6 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
-        /* Color Assignments */
         .red { background-color: #ff5252; }
         .brown { background-color: #8d6e63; }
         .pink { background-color: #f48fb1; }
@@ -98,21 +106,19 @@
         .teal { background-color: #4db6ac; }
         .grey { background-color: #b0bec5; }
 
-        /* Locked State */
         .chord-btn.locked {
             background-color: rgba(0, 0, 0, 0.05) !important;
-            box-shadow: inset 0 2px 5px rgba(0,0,0,0.05);
             cursor: not-allowed;
-            color: transparent; /* Hides emoji */
+            color: transparent;
         }
 
-        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; }
+        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>PRODIGIES-EGUCHI</h1>
+    
 
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
@@ -122,6 +128,8 @@
     <div class="game-panel">
         <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
         
+        <div id="timer-text"></div>
+
         <button id="play-btn" onclick="startRound()">Start Level</button>
         <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
         <div id="msg">Practice Mode: Tap animals to learn</div>
@@ -145,11 +153,13 @@
     const soundBuffers = {};
     const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey'];
     
-    let activeCount = 2; // Starts on Red/Brown
+    let activeCount = 2;
     let streak = 0;
     let strikes = 0;
     let currentTarget = null;
     let isGameActive = false;
+    let timeLeft = 10;
+    let timerInterval = null;
 
     async function loadSound(name) {
         try {
@@ -169,7 +179,40 @@
         source.start(0);
     }
 
-    function replaySound() { if (currentTarget) playSound(currentTarget); }
+    function replaySound() { 
+        if (currentTarget) {
+            playSound(currentTarget);
+            resetTimer(); // Reset the 10s if they choose to replay
+        }
+    }
+
+    function startTimer() {
+        timeLeft = 10;
+        document.getElementById('timer-text').innerText = `Time: ${timeLeft}s`;
+        timerInterval = setInterval(() => {
+            timeLeft--;
+            document.getElementById('timer-text').innerText = `Time: ${timeLeft}s`;
+            if (timeLeft <= 0) {
+                handleTimeout();
+            }
+        }, 1000);
+    }
+
+    function resetTimer() {
+        clearInterval(timerInterval);
+        startTimer();
+    }
+
+    function stopTimer() {
+        clearInterval(timerInterval);
+        document.getElementById('timer-text').innerText = "";
+    }
+
+    function handleTimeout() {
+        stopTimer();
+        document.getElementById('msg').innerText = "Too slow! ⏰";
+        processWrong();
+    }
 
     function startRound() {
         isGameActive = true;
@@ -182,7 +225,8 @@
         const available = progression.slice(0, activeCount);
         currentTarget = available[Math.floor(Math.random() * available.length)];
         playSound(currentTarget);
-        document.getElementById('msg').innerText = "Which animal sang?";
+        document.getElementById('msg').innerText = "Quick! Which animal sang?";
+        startTimer();
     }
 
     function handleInput(choice) {
@@ -194,6 +238,7 @@
         }
 
         if (choice === currentTarget) {
+            stopTimer();
             streak++;
             document.getElementById('msg').innerText = "Correct! ✨";
             if (streak >= 10 && activeCount < progression.length) {
@@ -203,20 +248,27 @@
                 isGameActive = false;
                 document.getElementById('play-btn').style.display = "block";
                 document.getElementById('replay-btn').style.display = "none";
-                document.getElementById('msg').innerText = "Level Unlocked! Practice Mode.";
+                document.getElementById('msg').innerText = "Level Up! Practice Mode.";
             } else {
                 updateUI();
                 setTimeout(nextQuestion, 1000);
             }
         } else {
-            strikes++;
-            streak = 0;
-            document.getElementById('msg').innerText = "Try again!";
-            updateUI();
-            if (strikes >= 3) {
-                alert("Strikes reached. Resetting progress.");
-                location.reload();
-            }
+            stopTimer();
+            document.getElementById('msg').innerText = "Wrong animal!";
+            processWrong();
+        }
+    }
+
+    function processWrong() {
+        strikes++;
+        streak = 0;
+        updateUI();
+        if (strikes >= 3) {
+            alert("3 Strikes! Progress Reset.");
+            location.reload();
+        } else {
+            setTimeout(nextQuestion, 1500);
         }
     }
 
