@@ -120,7 +120,6 @@
             border-radius: 15px;
             border: none;
             cursor: pointer;
-            /* FONT SIZE adjusted for mobile/desktop parity */
             font-size: 2.8rem; 
             display: flex;
             align-items: center;
@@ -133,17 +132,20 @@
             overflow: hidden;
         }
 
-        /* Logic to make emojis behave like the Octopus image */
-        .chord-btn.active { color: white !important; }
-        
-        /* Unified Icon Sizing */
+        /* The fix for image_9.png: hide contents by default */
         .chord-btn span, .chord-btn img {
             width: 70%;
             height: 70%;
-            display: flex;
+            display: none; /* Hidden when button is inactive */
             align-items: center;
             justify-content: center;
             object-fit: contain;
+        }
+
+        /* Only show contents when the button has the 'active' class */
+        .chord-btn.active span, 
+        .chord-btn.active img { 
+            display: flex !important; 
         }
 
         .chord-btn.active.red { background-color: #ff5252; }
@@ -162,16 +164,12 @@
         .chord-btn.active.lightyellow { background-color: #fafad2; }
 
         .chord-btn img {
-            display: none; 
             background-color: transparent !important;
             mix-blend-mode: multiply;
         }
 
-        .chord-btn.active img { display: block !important; }
-
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.95rem; }
 
-        /* Media query for smaller phones */
         @media (max-width: 400px) {
             .chord-btn { font-size: 2.2rem; }
         }
@@ -180,8 +178,8 @@
 <body>
 
 <div class="container">
-    <h1>PRODIGIES-EGUCHI</h1>
-    <div class="header-line"></div>
+    
+    
 
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
