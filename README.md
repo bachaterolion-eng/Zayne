@@ -143,25 +143,27 @@
         <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
         <div id="timer-text"></div>
         
+        <!-- Action Buttons -->
         <button id="play-btn" onclick="startRound()">Start Game</button>
         <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
+        
         <div id="msg">Explore the sounds before playing!</div>
 
         <div class="grid" id="button-grid">
-            <button class="chord-btn active red" id="btn-red" onclick="handleInput('red')"><span>🦞</span></button>
-            <button class="chord-btn active brown" id="btn-brown" onclick="handleInput('brown')"><span>🐻</span></button>
-            <button class="chord-btn active pink" id="btn-pink" onclick="handleInput('pink')"><span>🐷</span></button>
-            <button class="chord-btn active purple" id="btn-purple" onclick="handleInput('purple')"><img src="image_6.png" alt="Octopus"></button>
-            <button class="chord-btn active orange" id="btn-orange" onclick="handleInput('orange')"><span>🦊</span></button>
-            <button class="chord-btn active yellow" id="btn-yellow" onclick="handleInput('yellow')"><span>🐥</span></button>
-            <button class="chord-btn active green" id="btn-green" onclick="handleInput('green')"><span>🐸</span></button>
-            <button class="chord-btn active teal" id="btn-teal" onclick="handleInput('teal')"><span>🐬</span></button>
-            <button class="chord-btn active grey-note" id="btn-grey" onclick="handleInput('grey')"><span>🐘</span></button>
-            <button class="chord-btn active darkorange" id="btn-darkorange" onclick="handleInput('darkorange')"><span>🍊</span></button>
-            <button class="chord-btn active darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')"><span>🥝</span></button>
-            <button class="chord-btn active indigo" id="btn-indigo" onclick="handleInput('indigo')"><span>🫐</span></button>
-            <button class="chord-btn active lavender" id="btn-lavender" onclick="handleInput('lavender')"><span>🍇</span></button>
-            <button class="chord-btn active lightyellow" id="btn-lightyellow" onclick="handleInput('lightyellow')"><span>🍍</span></button>
+            <button class="chord-btn red" id="btn-red" onclick="handleInput('red')"><span>🦞</span></button>
+            <button class="chord-btn brown" id="btn-brown" onclick="handleInput('brown')"><span>🐻</span></button>
+            <button class="chord-btn pink" id="btn-pink" onclick="handleInput('pink')"><span>🐷</span></button>
+            <button class="chord-btn purple" id="btn-purple" onclick="handleInput('purple')"><img src="image_6.png" alt="Octopus"></button>
+            <button class="chord-btn orange" id="btn-orange" onclick="handleInput('orange')"><span>🦊</span></button>
+            <button class="chord-btn yellow" id="btn-yellow" onclick="handleInput('yellow')"><span>🐥</span></button>
+            <button class="chord-btn green" id="btn-green" onclick="handleInput('green')"><span>🐸</span></button>
+            <button class="chord-btn teal" id="btn-teal" onclick="handleInput('teal')"><span>🐬</span></button>
+            <button class="chord-btn grey-note" id="btn-grey" onclick="handleInput('grey')"><span>🐘</span></button>
+            <button class="chord-btn darkorange" id="btn-darkorange" onclick="handleInput('darkorange')"><span>🍊</span></button>
+            <button class="chord-btn darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')"><span>🥝</span></button>
+            <button class="chord-btn indigo" id="btn-indigo" onclick="handleInput('indigo')"><span>🫐</span></button>
+            <button class="chord-btn lavender" id="btn-lavender" onclick="handleInput('lavender')"><span>🍇</span></button>
+            <button class="chord-btn lightyellow" id="btn-lightyellow" onclick="handleInput('lightyellow')"><span>🍍</span></button>
         </div>
     </div>
 </div>
@@ -232,11 +234,6 @@
     function startRound() {
         isGameActive = true;
         streak = 0;
-        document.getElementById('play-btn').style.display = "none";
-        document.getElementById('replay-btn').style.display = "block"; 
-        document.getElementById('selector-box').style.display = "none";
-        document.getElementById('mode-label').innerText = "Game Mode";
-        document.getElementById('mode-label').classList.add('game-on');
         updateUI(); 
         nextQuestion();
     }
@@ -269,9 +266,9 @@
                 if (gameLevel < progression.length) {
                     gameLevel++;
                     streak = 0;
-                    isGameActive = false; // Exit Game Mode to show Test Mode/Explore UI
+                    isGameActive = false; // Transition back to Test/Practice Mode
                     updateUI();
-                    document.getElementById('msg').innerText = "LEVEL UP! Explore the new sound!";
+                    document.getElementById('msg').innerText = "LEVEL UP! Practice the new sound!";
                 } else {
                     document.getElementById('msg').innerText = "MASTERED! You finished all levels!";
                     isGameActive = false;
@@ -301,25 +298,31 @@
         document.getElementById('strikes').innerText = strikes;
         document.getElementById('progress-bar').style.width = (streak * 5) + "%";
 
-        // Logic to hide/show buttons based on mode
         if (isGameActive) {
             document.getElementById('play-btn').style.display = "none";
             document.getElementById('replay-btn').style.display = "block";
+            document.getElementById('selector-box').style.display = "none";
             document.getElementById('mode-label').innerText = "Game Mode";
             document.getElementById('mode-label').classList.add('game-on');
         } else {
             document.getElementById('play-btn').style.display = "block";
-            document.getElementById('play-btn').innerText = streak === 0 && strikes === 0 ? "Start Game" : "Begin Round";
-            document.getElementById('replay-btn').style.display = "none"; // Always hidden in Test/Level-Up Mode
+            document.getElementById('play-btn').innerText = (streak === 0 && strikes === 0) ? "Start Game" : "Begin Round";
+            document.getElementById('replay-btn').style.display = "none"; 
+            document.getElementById('selector-box').style.display = "block";
             document.getElementById('mode-label').innerText = "Test Mode";
             document.getElementById('mode-label').classList.remove('game-on');
+            document.getElementById('timer-text').innerText = "";
         }
 
+        // Fix: Buttons now ONLY show up to the current level in BOTH modes
         progression.forEach((color, i) => {
             const btnId = color === 'grey' ? 'btn-grey' : `btn-${color}`;
             const btn = document.getElementById(btnId);
-            if (!isGameActive || i < gameLevel) btn.classList.add('active');
-            else btn.classList.remove('active');
+            if (i < gameLevel) {
+                btn.classList.add('active');
+            } else {
+                btn.classList.remove('active');
+            }
         });
     }
     updateUI();
