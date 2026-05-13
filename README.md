@@ -89,24 +89,28 @@
         }
         #replay-btn { background: #1a73e8; display: none; }
 
+        /* Updated to Flexbox for centering the last row */
         .grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 12px;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 10px;
             margin-top: 10px;
+            width: 100%;
         }
 
         .chord-btn {
-            width: 95px;
-            height: 95px;
-            border-radius: 20px;
+            /* Width calculation for 4 items per row minus gaps */
+            width: calc(25% - 10px); 
+            aspect-ratio: 1 / 1;
+            border-radius: 15px;
             border: none;
             cursor: pointer;
-            font-size: 3.5rem;
+            font-size: 2.5rem; /* Smaller font to fit 4 per row */
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: transform 0.1s;
+            transition: all 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             background-color: #dfe6e9; 
             color: transparent; 
@@ -114,16 +118,23 @@
             overflow: hidden;
         }
 
-        /* Logic: Only show color and emoji/image when 'active' class is present */
-        .chord-btn.active.red { background-color: #ff5252; color: white; }
-        .chord-btn.active.brown { background-color: #8d6e63; color: white; }
-        .chord-btn.active.pink { background-color: #f48fb1; color: white; }
-        .chord-btn.active.purple { background-color: #ba68c8; color: white; }
-        .chord-btn.active.orange { background-color: #ffb74d; color: white; }
-        .chord-btn.active.yellow { background-color: #fff176; color: white; }
-        .chord-btn.active.green { background-color: #81c784; color: white; }
-        .chord-btn.active.teal { background-color: #4db6ac; color: white; }
-        .chord-btn.active.grey-note { background-color: #b0bec5; color: white; }
+        .chord-btn.active { color: white !important; }
+        
+        /* Colors */
+        .chord-btn.active.red { background-color: #ff5252; }
+        .chord-btn.active.brown { background-color: #8d6e63; }
+        .chord-btn.active.pink { background-color: #f48fb1; }
+        .chord-btn.active.purple { background-color: #ba68c8; }
+        .chord-btn.active.orange { background-color: #ffb74d; }
+        .chord-btn.active.yellow { background-color: #fff176; }
+        .chord-btn.active.green { background-color: #81c784; }
+        .chord-btn.active.teal { background-color: #4db6ac; }
+        .chord-btn.active.grey-note { background-color: #b0bec5; }
+        .chord-btn.active.darkorange { background-color: #e67e22; }
+        .chord-btn.active.darkgreen { background-color: #1b5e20; }
+        .chord-btn.active.indigo { background-color: #3f51b5; }
+        .chord-btn.active.lavender { background-color: #9b59b6; }
+        .chord-btn.active.rust { background-color: #d35400; }
 
         .chord-btn img {
             width: 85%;
@@ -131,14 +142,12 @@
             object-fit: contain;
             display: none; 
             background-color: transparent !important;
-            mix-blend-mode: multiply; /* Blends away any stubborn white edges */
+            mix-blend-mode: multiply;
         }
 
-        .chord-btn.active img {
-            display: block; 
-        }
+        .chord-btn.active img { display: block !important; }
 
-        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; }
+        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.9rem; }
     </style>
 </head>
 <body>
@@ -158,20 +167,32 @@
         
         <button id="play-btn" onclick="startRound()">Start Level</button>
         <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
-        <div id="msg">Practice Mode: Tap animals to learn</div>
+        <div id="msg">Practice Mode: Tap icons to learn</div>
 
         <div class="grid">
+            <!-- Row 1 -->
             <button class="chord-btn red" id="btn-red" onclick="handleInput('red')">🦞</button>
             <button class="chord-btn brown" id="btn-brown" onclick="handleInput('brown')">🐻</button>
             <button class="chord-btn pink" id="btn-pink" onclick="handleInput('pink')">🐷</button>
             <button class="chord-btn purple" id="btn-purple" onclick="handleInput('purple')">
                 <img src="image_6.png" alt="Octopus">
             </button>
+            
+            <!-- Row 2 -->
             <button class="chord-btn orange" id="btn-orange" onclick="handleInput('orange')">🦊</button>
             <button class="chord-btn yellow" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
             <button class="chord-btn green" id="btn-green" onclick="handleInput('green')">🐸</button>
             <button class="chord-btn teal" id="btn-teal" onclick="handleInput('teal')">🐬</button>
+
+            <!-- Row 3 -->
             <button class="chord-btn grey-note" id="btn-grey" onclick="handleInput('grey')">🐘</button>
+            <button class="chord-btn darkorange" id="btn-darkorange" onclick="handleInput('darkorange')">🍊</button>
+            <button class="chord-btn darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')">🥝</button>
+            <button class="chord-btn indigo" id="btn-indigo" onclick="handleInput('indigo')">🫐</button>
+
+            <!-- Row 4 (Centered because of flexbox) -->
+            <button class="chord-btn lavender" id="btn-lavender" onclick="handleInput('lavender')">🍇</button>
+            <button class="chord-btn rust" id="btn-rust" onclick="handleInput('rust')">🍑</button>
         </div>
     </div>
 </div>
@@ -179,9 +200,13 @@
 <script>
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const soundBuffers = {};
-    const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey'];
     
-    let activeCount = 2;
+    const progression = [
+        'red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey',
+        'darkorange', 'darkgreen', 'indigo', 'lavender', 'rust'
+    ];
+    
+    let activeCount = 2; 
     let streak = 0;
     let strikes = 0;
     let currentTarget = null;
@@ -215,6 +240,7 @@
     }
 
     function startTimer() {
+        clearInterval(timerInterval);
         timeLeft = 10;
         document.getElementById('timer-text').innerText = `Time: ${timeLeft}s`;
         timerInterval = setInterval(() => {
@@ -224,10 +250,7 @@
         }, 1000);
     }
 
-    function resetTimer() {
-        clearInterval(timerInterval);
-        startTimer();
-    }
+    function resetTimer() { startTimer(); }
 
     function stopTimer() {
         clearInterval(timerInterval);
@@ -251,7 +274,7 @@
         const available = progression.slice(0, activeCount);
         currentTarget = available[Math.floor(Math.random() * available.length)];
         playSound(currentTarget);
-        document.getElementById('msg').innerText = "Quick! Which animal sang?";
+        document.getElementById('msg').innerText = "Which one sang?";
         startTimer();
     }
 
@@ -285,7 +308,7 @@
             }
         } else {
             stopTimer();
-            document.getElementById('msg').innerText = "Wrong animal!";
+            document.getElementById('msg').innerText = "Oops!";
             processWrong();
         }
     }
@@ -295,7 +318,7 @@
         streak = 0;
         updateUI();
         if (strikes >= 3) {
-            alert("3 Strikes! Progress Reset.");
+            alert("Game Over!");
             location.reload();
         } else {
             setTimeout(nextQuestion, 1500);
