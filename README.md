@@ -22,8 +22,7 @@
             margin: 0;
             display: flex;
             flex-direction: column;
-            align-items: center; /* Global horizontal center */
-            justify-content: flex-start;
+            align-items: center; 
             padding: 20px;
             min-height: 100vh;
         }
@@ -36,44 +35,27 @@
             align-items: center; 
         }
 
-        /* HEADER STYLING - Now Centered */
-        .page-header {
-            width: 100%;
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .page-header h1 {
-            color: #1a73e8;
-            font-size: 1.8rem;
-            margin: 0 0 10px 0;
-            text-transform: none;
-        }
-
-        .header-line {
-            width: 100%;
-            height: 1px;
-            background: #ffffff;
-            opacity: 0.3;
-        }
-
-        /* STATS STYLING */
+        /* FIXED CENTERING FOR STATS */
         .stats { 
             display: flex; 
             justify-content: center; 
-            gap: 40px; 
-            margin: 10px 0 30px 0; 
+            align-items: center;
+            gap: 20px; 
+            margin: 40px auto 30px auto; 
             width: 100%;
+            max-width: 400px;
         }
         
         .stat-group { 
+            flex: 1; /* Gives both sides equal weight to force true center */
             display: flex; 
             flex-direction: column; 
             align-items: center;
+            text-align: center;
         }
         
-        .stat-val { font-size: 5rem; font-weight: 800; line-height: 1; margin: 0; }
-        .stat-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; margin-top: 5px; }
+        .stat-val { font-size: 5.5rem; font-weight: 800; line-height: 1; margin: 0; }
+        .stat-label { font-size: 0.85rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 2px; margin-top: 8px; }
 
         /* GAME PANEL */
         .game-panel {
@@ -120,9 +102,7 @@
             background: #2ecc71; color: white; border: none; padding: 12px 35px; border-radius: 40px;
             font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
-            transition: transform 0.1s;
         }
-        #play-btn:active { transform: scale(0.95); }
         #replay-btn { background: #1a73e8; display: none; box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3); }
 
         .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; width: 100%; }
@@ -142,7 +122,7 @@
 
         .chord-btn.active span, .chord-btn.active img { opacity: 1; }
 
-        /* Icon Colors */
+        /* Colors */
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
         .chord-btn.active.pink { background-color: #f48fb1; }
@@ -162,22 +142,16 @@
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 10px; font-size: 0.95rem; }
 
         @media (max-width: 400px) {
+            .stat-val { font-size: 4.5rem; }
             .chord-btn { font-size: 2.2rem; }
             .game-panel { min-height: 520px; padding: 20px; }
-            .stat-val { font-size: 4rem; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <!-- Centered Header Section -->
-    <div class="page-header">
-        <h1>Prodigies-Eguchi</h1>
-        <div class="header-line"></div>
-    </div>
-
-    <!-- Centered Stats Section -->
+    <!-- Centered Stats Only (Headers removed to fix duplication) -->
     <div class="stats">
         <div class="stat-group">
             <span id="streak" class="stat-val">0</span>
