@@ -26,7 +26,9 @@
         }
 
         .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
+
         h1 { color: #1a73e8; font-size: 1.8rem; text-align: center; margin: 20px 0 10px 0; width: 100%; }
+
         .header-line { width: 100%; height: 1px; background: #ffffff; margin-bottom: 20px; opacity: 0.3; }
 
         .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
@@ -56,6 +58,7 @@
             margin-bottom: 10px;
         }
         .mode-tag.game-on { background: #ffeaa7; color: #d35400; }
+        .mode-tag.test-round { background: #a29bfe; color: #ffffff; }
 
         .level-select-container { margin-bottom: 15px; color: #636e72; font-weight: 700; font-size: 0.9rem; }
         #level-select { 
@@ -73,44 +76,44 @@
 
         #timer-text { font-size: 1.2rem; font-weight: 800; color: var(--timer-color); margin-bottom: 10px; height: 1.5rem; }
 
-        #play-btn, #replay-btn {
+        #play-btn, #replay-btn, #begin-round-btn {
             background: #2ecc71; color: white; border: none; padding: 12px 30px; border-radius: 40px;
             font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 10px;
             box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
         }
         #replay-btn { background: #1a73e8; display: none; box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3); }
+        #begin-round-btn { background: #e67e22; display: none; box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3); }
 
         .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; width: 100%; }
 
-        /* Modified CSS to hide inactive buttons completely */
         .chord-btn {
             width: calc(25% - 10px); aspect-ratio: 1 / 1; border-radius: 15px; border: none;
-            cursor: pointer; font-size: 2.8rem; display: none; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 2.8rem; display: flex; align-items: center; justify-content: center;
             transition: background-color 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             background-color: #dfe6e9; padding: 0; position: relative;
         }
 
-        .chord-btn.active { display: flex; }
-
         .chord-btn span, .chord-btn img {
             width: 70%; height: 70%; display: flex; align-items: center; justify-content: center;
-            object-fit: contain;
+            object-fit: contain; opacity: 0; transition: opacity 0.2s;
         }
 
-        .chord-btn.red { background-color: #ff5252; }
-        .chord-btn.brown { background-color: #8d6e63; }
-        .chord-btn.pink { background-color: #f48fb1; }
-        .chord-btn.purple { background-color: #ba68c8; }
-        .chord-btn.orange { background-color: #ffb74d; }
-        .chord-btn.yellow { background-color: #fff176; }
-        .chord-btn.green { background-color: #81c784; }
-        .chord-btn.teal { background-color: #4db6ac; }
-        .chord-btn.grey-note { background-color: #b0bec5; }
-        .chord-btn.darkorange { background-color: #e67e22; }
-        .chord-btn.darkgreen { background-color: #1b5e20; }
-        .chord-btn.indigo { background-color: #3f51b5; }
-        .chord-btn.lavender { background-color: #9b59b6; }
-        .chord-btn.lightyellow { background-color: #fafad2; }
+        .chord-btn.active span, .chord-btn.active img { opacity: 1; }
+
+        .chord-btn.active.red { background-color: #ff5252; }
+        .chord-btn.active.brown { background-color: #8d6e63; }
+        .chord-btn.active.pink { background-color: #f48fb1; }
+        .chord-btn.active.purple { background-color: #ba68c8; }
+        .chord-btn.active.orange { background-color: #ffb74d; }
+        .chord-btn.active.yellow { background-color: #fff176; }
+        .chord-btn.active.green { background-color: #81c784; }
+        .chord-btn.active.teal { background-color: #4db6ac; }
+        .chord-btn.active.grey-note { background-color: #b0bec5; }
+        .chord-btn.active.darkorange { background-color: #e67e22; }
+        .chord-btn.active.darkgreen { background-color: #1b5e20; }
+        .chord-btn.active.indigo { background-color: #3f51b5; }
+        .chord-btn.active.lavender { background-color: #9b59b6; }
+        .chord-btn.active.lightyellow { background-color: #f0e68c; }
 
         .chord-btn img { mix-blend-mode: multiply; }
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.95rem; }
@@ -123,9 +126,6 @@
 </head>
 <body>
 <div class="container">
-    <h1>PRODIGIES-EGUCHI</h1>
-    <div class="header-line"></div>
-
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
         <div class="stat-group"><span id="strikes" class="stat-val" style="color:#ff5252">0</span><span class="stat-label">Strikes</span></div>
@@ -144,26 +144,26 @@
         <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
         <div id="timer-text"></div>
         
-        <button id="play-btn" onclick="startRound()">Start Game</button>
+        <button id="play-btn" onclick="prepareRound()">Start Game</button>
+        <button id="begin-round-btn" onclick="startActualGame()">Begin Round</button>
         <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
-        
-        <div id="msg">Explore the sounds before playing!</div>
+        <div id="msg">Explore all sounds before playing!</div>
 
         <div class="grid" id="button-grid">
-            <button class="chord-btn red" id="btn-red" onclick="handleInput('red')"><span>🦞</span></button>
-            <button class="chord-btn brown" id="btn-brown" onclick="handleInput('brown')"><span>🐻</span></button>
-            <button class="chord-btn pink" id="btn-pink" onclick="handleInput('pink')"><span>🐷</span></button>
-            <button class="chord-btn purple" id="btn-purple" onclick="handleInput('purple')"><img src="image_6.png" alt="Octopus"></button>
-            <button class="chord-btn orange" id="btn-orange" onclick="handleInput('orange')"><span>🦊</span></button>
-            <button class="chord-btn yellow" id="btn-yellow" onclick="handleInput('yellow')"><span>🐥</span></button>
-            <button class="chord-btn green" id="btn-green" onclick="handleInput('green')"><span>🐸</span></button>
-            <button class="chord-btn teal" id="btn-teal" onclick="handleInput('teal')"><span>🐬</span></button>
-            <button class="chord-btn grey-note" id="btn-grey" onclick="handleInput('grey')"><span>🐘</span></button>
-            <button class="chord-btn darkorange" id="btn-darkorange" onclick="handleInput('darkorange')"><span>🍊</span></button>
-            <button class="chord-btn darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')"><span>🥝</span></button>
-            <button class="chord-btn indigo" id="btn-indigo" onclick="handleInput('indigo')"><span>🫐</span></button>
-            <button class="chord-btn lavender" id="btn-lavender" onclick="handleInput('lavender')"><span>🍇</span></button>
-            <button class="chord-btn lightyellow" id="btn-lightyellow" onclick="handleInput('lightyellow')"><span>🍍</span></button>
+            <button class="chord-btn active red" id="btn-red" onclick="handleInput('red')"><span>🦞</span></button>
+            <button class="chord-btn active brown" id="btn-brown" onclick="handleInput('brown')"><span>🐻</span></button>
+            <button class="chord-btn active pink" id="btn-pink" onclick="handleInput('pink')"><span>🐷</span></button>
+            <button class="chord-btn active purple" id="btn-purple" onclick="handleInput('purple')"><img src="image_6.png" alt="Octopus"></button>
+            <button class="chord-btn active orange" id="btn-orange" onclick="handleInput('orange')"><span>🦊</span></button>
+            <button class="chord-btn active yellow" id="btn-yellow" onclick="handleInput('yellow')"><span>🐥</span></button>
+            <button class="chord-btn active green" id="btn-green" onclick="handleInput('green')"><span>🐸</span></button>
+            <button class="chord-btn active teal" id="btn-teal" onclick="handleInput('teal')"><span>🐬</span></button>
+            <button class="chord-btn active grey-note" id="btn-grey" onclick="handleInput('grey')"><span>🐘</span></button>
+            <button class="chord-btn active darkorange" id="btn-darkorange" onclick="handleInput('darkorange')"><span>🍊</span></button>
+            <button class="chord-btn active darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')"><span>🥝</span></button>
+            <button class="chord-btn active indigo" id="btn-indigo" onclick="handleInput('indigo')"><span>🫐</span></button>
+            <button class="chord-btn active lavender" id="btn-lavender" onclick="handleInput('lavender')"><span>🍇</span></button>
+            <button class="chord-btn active lightyellow" id="btn-lightyellow" onclick="handleInput('lightyellow')"><span>🍍</span></button>
         </div>
     </div>
 </div>
@@ -178,6 +178,7 @@
     let strikes = 0;
     let currentTarget = null;
     let isGameActive = false;
+    let isTestRound = false; 
     let timeLeft = 10;
     let timerInterval = null;
 
@@ -185,7 +186,7 @@
     progression.forEach((_, i) => {
         let opt = document.createElement('option');
         opt.value = i + 1;
-        opt.innerHTML = `Level ${i + 1}`;
+        opt.innerHTML = `Level ${i + 1} (${progression[i]})`;
         selector.appendChild(opt);
     });
 
@@ -217,6 +218,7 @@
     function replaySound() { if (currentTarget) { playSound(currentTarget); startTimer(); } }
 
     function startTimer() {
+        if (isTestRound) return; 
         clearInterval(timerInterval);
         timeLeft = 10;
         document.getElementById('timer-text').innerText = `Time: ${timeLeft}s`;
@@ -231,10 +233,31 @@
 
     function handleTimeout() { stopTimer(); document.getElementById('msg').innerText = "Too slow! ⏰"; processWrong(); }
 
-    function startRound() {
+    function prepareRound() {
         isGameActive = true;
+        isTestRound = true;
         streak = 0;
-        updateUI(); 
+        
+        document.getElementById('play-btn').style.display = "none";
+        document.getElementById('begin-round-btn').style.display = "block";
+        document.getElementById('selector-box').style.display = "none";
+        
+        document.getElementById('mode-label').innerText = "Test Round: Try the new sound!";
+        document.getElementById('mode-label').className = "mode-tag test-round";
+        
+        updateUI();
+        
+        const newColor = progression[gameLevel - 1];
+        document.getElementById('msg').innerText = `Level ${gameLevel}: Practice the ${newColor} sound!`;
+    }
+
+    function startActualGame() {
+        isTestRound = false;
+        document.getElementById('begin-round-btn').style.display = "none";
+        document.getElementById('replay-btn').style.display = "block";
+        document.getElementById('mode-label').innerText = "Game Mode";
+        document.getElementById('mode-label').className = "mode-tag game-on";
+        
         nextQuestion();
     }
 
@@ -251,9 +274,9 @@
         const btn = document.getElementById(btnId);
         if (!btn.classList.contains('active')) return;
 
-        if (!isGameActive) {
+        if (!isGameActive || isTestRound) {
             playSound(choice);
-            document.getElementById('msg').innerText = "Practice: " + choice;
+            document.getElementById('msg').innerText = "Testing: " + choice;
             return;
         }
 
@@ -265,10 +288,8 @@
             if (streak >= 20) {
                 if (gameLevel < progression.length) {
                     gameLevel++;
-                    streak = 0;
-                    isGameActive = false; 
-                    updateUI();
-                    document.getElementById('msg').innerText = "LEVEL UP! Practice the new sound!";
+                    document.getElementById('msg').innerText = "LEVEL UP! Prepare for a new sound...";
+                    setTimeout(prepareRound, 1500);
                 } else {
                     document.getElementById('msg').innerText = "MASTERED! You finished all levels!";
                     isGameActive = false;
@@ -297,32 +318,11 @@
         document.getElementById('streak').innerText = streak;
         document.getElementById('strikes').innerText = strikes;
         document.getElementById('progress-bar').style.width = (streak * 5) + "%";
-
-        if (isGameActive) {
-            document.getElementById('play-btn').style.display = "none";
-            document.getElementById('replay-btn').style.display = "block";
-            document.getElementById('selector-box').style.display = "none";
-            document.getElementById('mode-label').innerText = "Game Mode";
-            document.getElementById('mode-label').classList.add('game-on');
-        } else {
-            document.getElementById('play-btn').style.display = "block";
-            document.getElementById('play-btn').innerText = (streak === 0 && strikes === 0) ? "Start Game" : "Begin Round";
-            document.getElementById('replay-btn').style.display = "none"; 
-            document.getElementById('selector-box').style.display = "block";
-            document.getElementById('mode-label').innerText = "Test Mode";
-            document.getElementById('mode-label').classList.remove('game-on');
-            document.getElementById('timer-text').innerText = "";
-        }
-
-        // Strictly only show buttons up to the current level
         progression.forEach((color, i) => {
             const btnId = color === 'grey' ? 'btn-grey' : `btn-${color}`;
             const btn = document.getElementById(btnId);
-            if (i < gameLevel) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
+            if (!isGameActive || i < gameLevel) btn.classList.add('active');
+            else btn.classList.remove('active');
         });
     }
     updateUI();
