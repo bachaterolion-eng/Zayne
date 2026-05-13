@@ -21,8 +21,11 @@
             color: var(--text-main);
             margin: 0;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
+            align-items: center; /* Global horizontal center */
+            justify-content: flex-start;
             padding: 20px;
+            min-height: 100vh;
         }
 
         .container { 
@@ -33,26 +36,46 @@
             align-items: center; 
         }
 
-        /* Center the stats block */
+        /* HEADER STYLING - Now Centered */
+        .page-header {
+            width: 100%;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .page-header h1 {
+            color: #1a73e8;
+            font-size: 1.8rem;
+            margin: 0 0 10px 0;
+            text-transform: none;
+        }
+
+        .header-line {
+            width: 100%;
+            height: 1px;
+            background: #ffffff;
+            opacity: 0.3;
+        }
+
+        /* STATS STYLING */
         .stats { 
             display: flex; 
             justify-content: center; 
             gap: 40px; 
-            margin: 20px auto; 
+            margin: 10px 0 30px 0; 
             width: 100%;
-            text-align: center;
         }
         
         .stat-group { 
             display: flex; 
             flex-direction: column; 
             align-items: center;
-            min-width: 100px; /* Ensures balanced spacing */
         }
         
-        .stat-val { font-size: 5rem; font-weight: 800; line-height: 1; }
-        .stat-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; }
+        .stat-val { font-size: 5rem; font-weight: 800; line-height: 1; margin: 0; }
+        .stat-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; margin-top: 5px; }
 
+        /* GAME PANEL */
         .game-panel {
             background-color: var(--panel-bg);
             padding: 25px;
@@ -62,6 +85,7 @@
             align-items: center;
             width: 100%;
             min-height: 580px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
 
         .mode-tag {
@@ -72,7 +96,7 @@
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            margin-bottom: 10px;
+            margin-bottom: 15px;
         }
         .mode-tag.game-on { background: #ffeaa7; color: #d35400; }
 
@@ -87,16 +111,18 @@
             cursor: pointer;
         }
 
-        .progress-container { width: 100%; height: 12px; background-color: var(--progress-bg); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+        .progress-container { width: 100%; height: 12px; background-color: var(--progress-bg); border-radius: 10px; margin-bottom: 15px; overflow: hidden; }
         .progress-bar { height: 100%; width: 0%; background-color: var(--progress-fill); transition: width 0.3s; }
 
         #timer-text { font-size: 1.2rem; font-weight: 800; color: var(--timer-color); margin-bottom: 10px; height: 1.5rem; }
 
         #play-btn, #replay-btn {
-            background: #2ecc71; color: white; border: none; padding: 12px 30px; border-radius: 40px;
-            font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 10px;
+            background: #2ecc71; color: white; border: none; padding: 12px 35px; border-radius: 40px;
+            font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-bottom: 15px;
             box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
+            transition: transform 0.1s;
         }
+        #play-btn:active { transform: scale(0.95); }
         #replay-btn { background: #1a73e8; display: none; box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3); }
 
         .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; width: 100%; }
@@ -104,18 +130,19 @@
         .chord-btn {
             width: calc(25% - 10px); aspect-ratio: 1 / 1; border-radius: 15px; border: none;
             cursor: pointer; font-size: 2.8rem; display: flex; align-items: center; justify-content: center;
-            transition: background-color 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.2s, transform 0.1s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             background-color: #dfe6e9; padding: 0; position: relative;
         }
+        .chord-btn:active { transform: scale(0.92); }
 
         .chord-btn span, .chord-btn img {
-            width: 70%; height: 70%; display: flex; align-items: center; justify-content: center;
+            width: 75%; height: 75%; display: flex; align-items: center; justify-content: center;
             object-fit: contain; opacity: 0; transition: opacity 0.2s;
         }
 
         .chord-btn.active span, .chord-btn.active img { opacity: 1; }
 
-        /* Colors */
+        /* Icon Colors */
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
         .chord-btn.active.pink { background-color: #f48fb1; }
@@ -132,11 +159,11 @@
         .chord-btn.active.lightyellow { background-color: #fafad2; }
 
         .chord-btn img { mix-blend-mode: multiply; }
-        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.95rem; }
+        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 10px; font-size: 0.95rem; }
 
         @media (max-width: 400px) {
             .chord-btn { font-size: 2.2rem; }
-            .game-panel { min-height: 520px; }
+            .game-panel { min-height: 520px; padding: 20px; }
             .stat-val { font-size: 4rem; }
         }
     </style>
@@ -144,6 +171,13 @@
 <body>
 
 <div class="container">
+    <!-- Centered Header Section -->
+    <div class="page-header">
+        <h1>Prodigies-Eguchi</h1>
+        <div class="header-line"></div>
+    </div>
+
+    <!-- Centered Stats Section -->
     <div class="stats">
         <div class="stat-group">
             <span id="streak" class="stat-val">0</span>
