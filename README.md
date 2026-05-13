@@ -56,6 +56,8 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
+            /* Fix for image_12: Prevents the panel from shrinking when game starts */
+            min-height: 550px; 
         }
 
         .mode-tag {
@@ -124,29 +126,33 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            transition: background-color 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            background-color: #dfe6e9; /* Default inactive color */
+            background-color: #dfe6e9; 
             padding: 0;
-            overflow: hidden;
+            position: relative;
         }
 
-        /* Icon Container Sizing */
+        /* ICON SIZE FIX: Unified sizing for emoji and Octopus */
         .chord-btn span, .chord-btn img {
             width: 70%;
             height: 70%;
-            display: none; /* Hide contents by default */
+            display: flex;
             align-items: center;
             justify-content: center;
             object-fit: contain;
+            /* Layout Fix: We use opacity instead of display:none to prevent shrinking */
+            opacity: 0; 
+            transition: opacity 0.2s;
         }
 
-        /* Show content and color only when active */
+        /* Show content when active */
         .chord-btn.active span, 
         .chord-btn.active img { 
-            display: flex !important; 
+            opacity: 1; 
         }
 
+        /* Background colors only applied when active */
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
         .chord-btn.active.pink { background-color: #f48fb1; }
@@ -162,22 +168,21 @@
         .chord-btn.active.lavender { background-color: #9b59b6; }
         .chord-btn.active.lightyellow { background-color: #fafad2; }
 
-        .chord-btn img {
-            mix-blend-mode: multiply;
-        }
+        .chord-btn img { mix-blend-mode: multiply; }
 
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.95rem; }
 
         @media (max-width: 400px) {
             .chord-btn { font-size: 2.2rem; }
+            .game-panel { min-height: 480px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>PRODIGIES-EGUCHI</h1>
-    <div class="header-line"></div>
+    
+    
 
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
@@ -220,11 +225,7 @@
 <script>
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const soundBuffers = {};
-    
-    const progression = [
-        'red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey',
-        'darkorange', 'darkgreen', 'indigo', 'lavender', 'lightyellow'
-    ];
+    const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey', 'darkorange', 'darkgreen', 'indigo', 'lavender', 'lightyellow'];
     
     let gameLevel = 2; 
     let streak = 0;
@@ -252,12 +253,7 @@
         source.start(0);
     }
 
-    function replaySound() { 
-        if (currentTarget) {
-            playSound(currentTarget);
-            startTimer();
-        }
-    }
+    function replaySound() { if (currentTarget) { playSound(currentTarget); startTimer(); } }
 
     function startTimer() {
         clearInterval(timerInterval);
@@ -270,16 +266,9 @@
         }, 1000);
     }
 
-    function stopTimer() {
-        clearInterval(timerInterval);
-        document.getElementById('timer-text').innerText = "";
-    }
+    function stopTimer() { clearInterval(timerInterval); document.getElementById('timer-text').innerText = ""; }
 
-    function handleTimeout() {
-        stopTimer();
-        document.getElementById('msg').innerText = "Too slow! ⏰";
-        processWrong();
-    }
+    function handleTimeout() { stopTimer(); document.getElementById('msg').innerText = "Too slow! ⏰"; processWrong(); }
 
     function startRound() {
         isGameActive = true;
@@ -302,16 +291,11 @@
     function handleInput(choice) {
         const btnId = choice === 'grey' ? 'btn-grey' : `btn-${choice}`;
         const btn = document.getElementById(btnId);
-        
         if (!btn.classList.contains('active')) return;
 
         if (!isGameActive) {
             playSound(choice);
-            let displayName = choice;
-            if (choice === 'lightyellow') displayName = 'light yellow';
-            if (choice === 'darkorange') displayName = 'dark orange';
-            if (choice === 'darkgreen') displayName = 'dark green';
-            document.getElementById('msg').innerText = "Testing: " + displayName;
+            document.getElementById('msg').innerText = "Testing: " + choice;
             return;
         }
 
@@ -319,62 +303,40 @@
             stopTimer();
             streak++;
             document.getElementById('msg').innerText = "Correct! ✨";
-            
             if (streak >= 20 && gameLevel < progression.length) {
-                gameLevel++;
-                streak = 0;
-                isGameActive = false;
-                updateUI(); 
+                gameLevel++; streak = 0; isGameActive = false;
+                updateUI();
                 document.getElementById('play-btn').style.display = "block";
-                document.getElementById('play-btn').innerText = "Start Next Level";
                 document.getElementById('replay-btn').style.display = "none";
                 document.getElementById('mode-label').innerText = "Test Mode";
                 document.getElementById('mode-label').classList.remove('game-on');
-                document.getElementById('msg').innerText = "Level Up! Practice the new sound.";
             } else {
                 updateUI();
                 setTimeout(nextQuestion, 1000);
             }
         } else {
             stopTimer();
-            document.getElementById('msg').innerText = "Oops! Try again.";
             processWrong();
         }
     }
 
     function processWrong() {
-        strikes++;
-        streak = 0;
-        updateUI();
-        if (strikes >= 3) {
-            alert("Game Over! Back to Test Mode.");
-            location.reload();
-        } else {
-            setTimeout(nextQuestion, 1500);
-        }
+        strikes++; streak = 0; updateUI();
+        if (strikes >= 3) { alert("Game Over!"); location.reload(); }
+        else { setTimeout(nextQuestion, 1500); }
     }
 
     function updateUI() {
         document.getElementById('streak').innerText = streak;
         document.getElementById('strikes').innerText = strikes;
         document.getElementById('progress-bar').style.width = (streak * 5) + "%";
-
         progression.forEach((color, i) => {
             const btnId = color === 'grey' ? 'btn-grey' : `btn-${color}`;
             const btn = document.getElementById(btnId);
-            
-            if (!isGameActive) {
-                btn.classList.add('active'); // In Test Mode, everything is active
-            } else {
-                if (i < gameLevel) {
-                    btn.classList.add('active');
-                } else {
-                    btn.classList.remove('active');
-                }
-            }
+            if (!isGameActive || i < gameLevel) btn.classList.add('active');
+            else btn.classList.remove('active');
         });
     }
-
     updateUI();
 </script>
 </body>
