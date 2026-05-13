@@ -58,6 +58,22 @@
             width: 100%;
         }
 
+        /* Mode Indicator Tag */
+        .mode-tag {
+            background: #dfe6e9;
+            color: #636e72;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+        .mode-tag.game-on {
+            background: #ffeaa7;
+            color: #d35400;
+        }
+
         .progress-container {
             width: 100%;
             height: 12px;
@@ -77,17 +93,18 @@
         }
 
         #play-btn, #replay-btn {
-            background: #2d3436;
+            background: #2ecc71;
             color: white;
             border: none;
             padding: 12px 30px; 
             border-radius: 40px;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
         }
-        #replay-btn { background: #1a73e8; display: none; }
+        #replay-btn { background: #1a73e8; display: none; box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3); }
 
         .grid {
             display: flex;
@@ -104,7 +121,6 @@
             border-radius: 15px;
             border: none;
             cursor: pointer;
-            /* BIGGER EMOJI SIZE HERE */
             font-size: 4.5rem; 
             display: flex;
             align-items: center;
@@ -119,6 +135,7 @@
         }
 
         .chord-btn.active { color: white !important; }
+        .chord-btn:active { transform: scale(0.92); }
         
         /* Colors */
         .chord-btn.active.red { background-color: #ff5252; }
@@ -137,7 +154,6 @@
         .chord-btn.active.rust { background-color: #d35400; }
 
         .chord-btn img {
-            /* BIGGER OCTOPUS IMAGE HERE */
             width: 95%;
             height: 95%;
             object-fit: contain;
@@ -148,14 +164,14 @@
 
         .chord-btn.active img { display: block !important; }
 
-        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.9rem; }
+        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.95rem; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h1>PRODIGIES-EGUCHI</h1>
-    <div class="header-line"></div>
+   
+    
 
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
@@ -163,12 +179,13 @@
     </div>
 
     <div class="game-panel">
+        <div id="mode-label" class="mode-tag">Test Mode</div>
         <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
         <div id="timer-text"></div>
         
-        <button id="play-btn" onclick="startRound()">Start Level</button>
+        <button id="play-btn" onclick="startRound()">Start Game</button>
         <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
-        <div id="msg">Practice Mode: Tap icons to learn</div>
+        <div id="msg">Tap icons to hear their sounds</div>
 
         <div class="grid">
             <button class="chord-btn red" id="btn-red" onclick="handleInput('red')">🦞</button>
@@ -247,7 +264,7 @@
         }, 1000);
     }
 
-    function resetTimer() { startTimer(); }
+    function resetTimer() { if(isGameActive) startTimer(); }
 
     function stopTimer() {
         clearInterval(timerInterval);
@@ -264,6 +281,8 @@
         isGameActive = true;
         document.getElementById('play-btn').style.display = "none";
         document.getElementById('replay-btn').style.display = "block";
+        document.getElementById('mode-label').innerText = "Game Mode";
+        document.getElementById('mode-label').classList.add('game-on');
         nextQuestion();
     }
 
@@ -271,7 +290,7 @@
         const available = progression.slice(0, activeCount);
         currentTarget = available[Math.floor(Math.random() * available.length)];
         playSound(currentTarget);
-        document.getElementById('msg').innerText = "Which one sang?";
+        document.getElementById('msg').innerText = "Listen... Which one was that?";
         startTimer();
     }
 
@@ -281,11 +300,14 @@
         
         if (!btn.classList.contains('active')) return;
 
+        // If in TEST MODE (Game not active)
         if (!isGameActive) {
             playSound(choice);
+            document.getElementById('msg').innerText = "Testing: " + choice;
             return;
         }
 
+        // If in GAME MODE
         if (choice === currentTarget) {
             stopTimer();
             streak++;
@@ -294,18 +316,21 @@
             if (streak >= 20 && activeCount < progression.length) {
                 activeCount++;
                 streak = 0;
+                isGameActive = false; // Revert to test mode for the new level
                 updateUI();
-                isGameActive = false;
                 document.getElementById('play-btn').style.display = "block";
+                document.getElementById('play-btn').innerText = "Start Next Level";
                 document.getElementById('replay-btn').style.display = "none";
-                document.getElementById('msg').innerText = "Level Up! Practice Mode.";
+                document.getElementById('mode-label').innerText = "Test Mode";
+                document.getElementById('mode-label').classList.remove('game-on');
+                document.getElementById('msg').innerText = "Level Up! Practice the new sound.";
             } else {
                 updateUI();
                 setTimeout(nextQuestion, 1000);
             }
         } else {
             stopTimer();
-            document.getElementById('msg').innerText = "Oops!";
+            document.getElementById('msg').innerText = "Oops! Try again.";
             processWrong();
         }
     }
@@ -315,7 +340,7 @@
         streak = 0;
         updateUI();
         if (strikes >= 3) {
-            alert("Game Over!");
+            alert("Game Over! Let's practice some more.");
             location.reload();
         } else {
             setTimeout(nextQuestion, 1500);
