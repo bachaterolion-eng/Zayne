@@ -26,9 +26,7 @@
         }
 
         .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
-
         h1 { color: #1a73e8; font-size: 1.8rem; text-align: center; margin: 20px 0 10px 0; width: 100%; }
-
         .header-line { width: 100%; height: 1px; background: #ffffff; margin-bottom: 20px; opacity: 0.3; }
 
         .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
@@ -58,7 +56,6 @@
             margin-bottom: 10px;
         }
         .mode-tag.game-on { background: #ffeaa7; color: #d35400; }
-        .mode-tag.test-round { background: #a29bfe; color: #ffffff; }
 
         .level-select-container { margin-bottom: 15px; color: #636e72; font-weight: 700; font-size: 0.9rem; }
         #level-select { 
@@ -76,13 +73,12 @@
 
         #timer-text { font-size: 1.2rem; font-weight: 800; color: var(--timer-color); margin-bottom: 10px; height: 1.5rem; }
 
-        #play-btn, #replay-btn, #begin-round-btn {
+        #play-btn, #replay-btn {
             background: #2ecc71; color: white; border: none; padding: 12px 30px; border-radius: 40px;
             font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 10px;
             box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
         }
         #replay-btn { background: #1a73e8; display: none; box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3); }
-        #begin-round-btn { background: #e67e22; display: none; box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3); }
 
         .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; width: 100%; }
 
@@ -113,7 +109,7 @@
         .chord-btn.active.darkgreen { background-color: #1b5e20; }
         .chord-btn.active.indigo { background-color: #3f51b5; }
         .chord-btn.active.lavender { background-color: #9b59b6; }
-        .chord-btn.active.lightyellow { background-color: #f0e68c; }
+        .chord-btn.active.lightyellow { background-color: #fafad2; }
 
         .chord-btn img { mix-blend-mode: multiply; }
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.95rem; }
@@ -126,6 +122,9 @@
 </head>
 <body>
 <div class="container">
+    <h1>PRODIGIES-EGUCHI</h1>
+    <div class="header-line"></div>
+
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
         <div class="stat-group"><span id="strikes" class="stat-val" style="color:#ff5252">0</span><span class="stat-label">Strikes</span></div>
@@ -144,10 +143,9 @@
         <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
         <div id="timer-text"></div>
         
-        <button id="play-btn" onclick="prepareRound()">Start Game</button>
-        <button id="begin-round-btn" onclick="startActualGame()">Begin Round</button>
+        <button id="play-btn" onclick="startRound()">Start Game</button>
         <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
-        <div id="msg">Explore all sounds before playing!</div>
+        <div id="msg">Explore the sounds before playing!</div>
 
         <div class="grid" id="button-grid">
             <button class="chord-btn active red" id="btn-red" onclick="handleInput('red')"><span>🦞</span></button>
@@ -178,7 +176,6 @@
     let strikes = 0;
     let currentTarget = null;
     let isGameActive = false;
-    let isTestRound = false; 
     let timeLeft = 10;
     let timerInterval = null;
 
@@ -186,7 +183,7 @@
     progression.forEach((_, i) => {
         let opt = document.createElement('option');
         opt.value = i + 1;
-        opt.innerHTML = `Level ${i + 1} (${progression[i]})`;
+        opt.innerHTML = `Level ${i + 1}`;
         selector.appendChild(opt);
     });
 
@@ -218,7 +215,6 @@
     function replaySound() { if (currentTarget) { playSound(currentTarget); startTimer(); } }
 
     function startTimer() {
-        if (isTestRound) return; 
         clearInterval(timerInterval);
         timeLeft = 10;
         document.getElementById('timer-text').innerText = `Time: ${timeLeft}s`;
@@ -233,31 +229,15 @@
 
     function handleTimeout() { stopTimer(); document.getElementById('msg').innerText = "Too slow! ⏰"; processWrong(); }
 
-    function prepareRound() {
+    function startRound() {
         isGameActive = true;
-        isTestRound = true;
         streak = 0;
-        
         document.getElementById('play-btn').style.display = "none";
-        document.getElementById('begin-round-btn').style.display = "block";
+        document.getElementById('replay-btn').style.display = "block"; // Show only when game starts
         document.getElementById('selector-box').style.display = "none";
-        
-        document.getElementById('mode-label').innerText = "Test Round: Try the new sound!";
-        document.getElementById('mode-label').className = "mode-tag test-round";
-        
-        updateUI();
-        
-        const newColor = progression[gameLevel - 1];
-        document.getElementById('msg').innerText = `Level ${gameLevel}: Practice the ${newColor} sound!`;
-    }
-
-    function startActualGame() {
-        isTestRound = false;
-        document.getElementById('begin-round-btn').style.display = "none";
-        document.getElementById('replay-btn').style.display = "block";
         document.getElementById('mode-label').innerText = "Game Mode";
-        document.getElementById('mode-label').className = "mode-tag game-on";
-        
+        document.getElementById('mode-label').classList.add('game-on');
+        updateUI(); 
         nextQuestion();
     }
 
@@ -274,7 +254,7 @@
         const btn = document.getElementById(btnId);
         if (!btn.classList.contains('active')) return;
 
-        if (!isGameActive || isTestRound) {
+        if (!isGameActive) {
             playSound(choice);
             document.getElementById('msg').innerText = "Testing: " + choice;
             return;
@@ -288,8 +268,11 @@
             if (streak >= 20) {
                 if (gameLevel < progression.length) {
                     gameLevel++;
-                    document.getElementById('msg').innerText = "LEVEL UP! Prepare for a new sound...";
-                    setTimeout(prepareRound, 1500);
+                    streak = 0;
+                    document.getElementById('msg').innerText = "LEVEL UP! Adding a new sound...";
+                    updateUI();
+                    // Keep Replay button visible during the brief pause for Level Up
+                    setTimeout(nextQuestion, 2000); 
                 } else {
                     document.getElementById('msg').innerText = "MASTERED! You finished all levels!";
                     isGameActive = false;
