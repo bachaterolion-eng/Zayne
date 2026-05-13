@@ -233,7 +233,7 @@
         isGameActive = true;
         streak = 0;
         document.getElementById('play-btn').style.display = "none";
-        document.getElementById('replay-btn').style.display = "block"; // Show only when game starts
+        document.getElementById('replay-btn').style.display = "block"; 
         document.getElementById('selector-box').style.display = "none";
         document.getElementById('mode-label').innerText = "Game Mode";
         document.getElementById('mode-label').classList.add('game-on');
@@ -269,10 +269,9 @@
                 if (gameLevel < progression.length) {
                     gameLevel++;
                     streak = 0;
-                    document.getElementById('msg').innerText = "LEVEL UP! Adding a new sound...";
+                    isGameActive = false; // Exit Game Mode to show Test Mode/Explore UI
                     updateUI();
-                    // Keep Replay button visible during the brief pause for Level Up
-                    setTimeout(nextQuestion, 2000); 
+                    document.getElementById('msg').innerText = "LEVEL UP! Explore the new sound!";
                 } else {
                     document.getElementById('msg').innerText = "MASTERED! You finished all levels!";
                     isGameActive = false;
@@ -301,6 +300,21 @@
         document.getElementById('streak').innerText = streak;
         document.getElementById('strikes').innerText = strikes;
         document.getElementById('progress-bar').style.width = (streak * 5) + "%";
+
+        // Logic to hide/show buttons based on mode
+        if (isGameActive) {
+            document.getElementById('play-btn').style.display = "none";
+            document.getElementById('replay-btn').style.display = "block";
+            document.getElementById('mode-label').innerText = "Game Mode";
+            document.getElementById('mode-label').classList.add('game-on');
+        } else {
+            document.getElementById('play-btn').style.display = "block";
+            document.getElementById('play-btn').innerText = streak === 0 && strikes === 0 ? "Start Game" : "Begin Round";
+            document.getElementById('replay-btn').style.display = "none"; // Always hidden in Test/Level-Up Mode
+            document.getElementById('mode-label').innerText = "Test Mode";
+            document.getElementById('mode-label').classList.remove('game-on');
+        }
+
         progression.forEach((color, i) => {
             const btnId = color === 'grey' ? 'btn-grey' : `btn-${color}`;
             const btn = document.getElementById(btnId);
