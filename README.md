@@ -23,38 +23,19 @@
             display: flex;
             justify-content: center;
             padding: 20px;
-            min-height: 100vh;
         }
 
-        .container { 
-            width: 100%; 
-            max-width: 500px; 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center; 
-        }
+        .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
 
-        /* NEW STATS STYLING - Moved inside or pinned to center */
-        .stats { 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            gap: 40px; 
-            margin: 0 auto 30px auto; 
-            width: 100%;
-        }
-        
-        .stat-group { 
-            display: flex; 
-            flex-direction: column; 
-            align-items: center;
-            text-align: center;
-        }
-        
-        .stat-val { font-size: 5.5rem; font-weight: 800; line-height: 1; margin: 0; }
-        .stat-label { font-size: 0.85rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 2px; margin-top: 8px; }
+        h1 { color: #1a73e8; font-size: 1.8rem; text-align: center; margin: 20px 0 10px 0; width: 100%; }
 
-        /* GAME PANEL */
+        .header-line { width: 100%; height: 1px; background: #ffffff; margin-bottom: 20px; opacity: 0.3; }
+
+        .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
+        .stat-group { display: flex; flex-direction: column; align-items: center; }
+        .stat-val { font-size: 5rem; font-weight: 800; line-height: 1; }
+        .stat-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; }
+
         .game-panel {
             background-color: var(--panel-bg);
             padding: 25px;
@@ -64,8 +45,6 @@
             align-items: center;
             width: 100%;
             min-height: 580px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin-top: 20px;
         }
 
         .mode-tag {
@@ -76,7 +55,7 @@
             font-size: 0.75rem;
             font-weight: 700;
             text-transform: uppercase;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
         .mode-tag.game-on { background: #ffeaa7; color: #d35400; }
 
@@ -91,14 +70,14 @@
             cursor: pointer;
         }
 
-        .progress-container { width: 100%; height: 12px; background-color: var(--progress-bg); border-radius: 10px; margin-bottom: 15px; overflow: hidden; }
+        .progress-container { width: 100%; height: 12px; background-color: var(--progress-bg); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
         .progress-bar { height: 100%; width: 0%; background-color: var(--progress-fill); transition: width 0.3s; }
 
         #timer-text { font-size: 1.2rem; font-weight: 800; color: var(--timer-color); margin-bottom: 10px; height: 1.5rem; }
 
         #play-btn, #replay-btn {
-            background: #2ecc71; color: white; border: none; padding: 12px 35px; border-radius: 40px;
-            font-size: 1.1rem; font-weight: 700; cursor: pointer; margin-bottom: 15px;
+            background: #2ecc71; color: white; border: none; padding: 12px 30px; border-radius: 40px;
+            font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 10px;
             box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
         }
         #replay-btn { background: #1a73e8; display: none; box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3); }
@@ -108,19 +87,17 @@
         .chord-btn {
             width: calc(25% - 10px); aspect-ratio: 1 / 1; border-radius: 15px; border: none;
             cursor: pointer; font-size: 2.8rem; display: flex; align-items: center; justify-content: center;
-            transition: background-color 0.2s, transform 0.1s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             background-color: #dfe6e9; padding: 0; position: relative;
         }
-        .chord-btn:active { transform: scale(0.92); }
 
         .chord-btn span, .chord-btn img {
-            width: 75%; height: 75%; display: flex; align-items: center; justify-content: center;
+            width: 70%; height: 70%; display: flex; align-items: center; justify-content: center;
             object-fit: contain; opacity: 0; transition: opacity 0.2s;
         }
 
         .chord-btn.active span, .chord-btn.active img { opacity: 1; }
 
-        /* Icon Colors */
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
         .chord-btn.active.pink { background-color: #f48fb1; }
@@ -137,38 +114,31 @@
         .chord-btn.active.lightyellow { background-color: #fafad2; }
 
         .chord-btn img { mix-blend-mode: multiply; }
-        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 10px; font-size: 0.95rem; }
+        #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.95rem; }
 
         @media (max-width: 400px) {
-            .stat-val { font-size: 4rem; }
             .chord-btn { font-size: 2.2rem; }
-            .game-panel { min-height: 520px; padding: 20px; }
+            .game-panel { min-height: 520px; }
         }
     </style>
 </head>
 <body>
-
 <div class="container">
-    <!-- STATS AREA -->
+    <h1>PRODIGIES-EGUCHI</h1>
+    <div class="header-line"></div>
+
     <div class="stats">
-        <div class="stat-group">
-            <span id="streak" class="stat-val">0</span>
-            <span class="stat-label">Streak</span>
-        </div>
-        <div class="stat-group">
-            <span id="strikes" class="stat-val" style="color:#ff5252">0</span>
-            <span class="stat-label">Strikes</span>
-        </div>
+        <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
+        <div class="stat-group"><span id="strikes" class="stat-val" style="color:#ff5252">0</span><span class="stat-label">Strikes</span></div>
     </div>
 
-    <!-- MAIN GAME PANEL -->
     <div class="game-panel">
         <div id="mode-label" class="mode-tag">Test Mode</div>
         
         <div class="level-select-container" id="selector-box">
             Start at Level: 
             <select id="level-select" onchange="changeStartingLevel()">
-                <!-- JS generated -->
+                <!-- Generated by JS -->
             </select>
         </div>
 
@@ -203,6 +173,7 @@
     const soundBuffers = {};
     const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey', 'darkorange', 'darkgreen', 'indigo', 'lavender', 'lightyellow'];
     
+    // Changed initial level to 1 (Lobster only)
     let gameLevel = 1; 
     let streak = 0;
     let strikes = 0;
@@ -211,11 +182,12 @@
     let timeLeft = 10;
     let timerInterval = null;
 
+    // Updated Level Selector to include Level 1
     const selector = document.getElementById('level-select');
     progression.forEach((_, i) => {
         let opt = document.createElement('option');
         opt.value = i + 1;
-        opt.innerHTML = `Level ${i + 1}`;
+        opt.innerHTML = `Level ${i + 1} (${progression[i]})`;
         selector.appendChild(opt);
     });
 
@@ -301,11 +273,11 @@
                 if (gameLevel < progression.length) {
                     gameLevel++;
                     streak = 0;
-                    document.getElementById('msg').innerText = "LEVEL UP!";
+                    document.getElementById('msg').innerText = "LEVEL UP! Adding a new sound...";
                     updateUI();
-                    setTimeout(nextQuestion, 1500); 
+                    setTimeout(nextQuestion, 2000);
                 } else {
-                    document.getElementById('msg').innerText = "MASTERED!";
+                    document.getElementById('msg').innerText = "MASTERED! You finished all levels!";
                     isGameActive = false;
                     setTimeout(() => location.reload(), 3000);
                 }
@@ -335,6 +307,7 @@
         progression.forEach((color, i) => {
             const btnId = color === 'grey' ? 'btn-grey' : `btn-${color}`;
             const btn = document.getElementById(btnId);
+            // In Test Mode, all buttons are visible. In Game Mode, only those up to current gameLevel.
             if (!isGameActive || i < gameLevel) btn.classList.add('active');
             else btn.classList.remove('active');
         });
