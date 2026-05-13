@@ -27,21 +27,9 @@
 
         .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
 
-        h1 { 
-            color: #1a73e8; 
-            font-size: 1.8rem; 
-            text-align: center; 
-            margin: 20px 0 10px 0; 
-            width: 100%; 
-        }
+        h1 { color: #1a73e8; font-size: 1.8rem; text-align: center; margin: 20px 0 10px 0; width: 100%; }
 
-        .header-line {
-            width: 100%;
-            height: 1px;
-            background: #ffffff;
-            margin-bottom: 20px;
-            opacity: 0.3;
-        }
+        .header-line { width: 100%; height: 1px; background: #ffffff; margin-bottom: 20px; opacity: 0.3; }
 
         .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
         .stat-group { display: flex; flex-direction: column; align-items: center; }
@@ -56,8 +44,7 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            /* Fix for image_12: Prevents the panel from shrinking when game starts */
-            min-height: 550px; 
+            min-height: 580px; 
         }
 
         .mode-tag {
@@ -70,89 +57,48 @@
             text-transform: uppercase;
             margin-bottom: 10px;
         }
-        .mode-tag.game-on {
-            background: #ffeaa7;
-            color: #d35400;
+        .mode-tag.game-on { background: #ffeaa7; color: #d35400; }
+
+        .level-select-container { margin-bottom: 15px; color: #636e72; font-weight: 700; font-size: 0.9rem; }
+        #level-select { 
+            padding: 5px 10px; 
+            border-radius: 10px; 
+            border: 2px solid #dfe6e9; 
+            background: white;
+            font-weight: 700;
+            color: #1a73e8;
+            cursor: pointer;
         }
 
-        .progress-container {
-            width: 100%;
-            height: 12px;
-            background-color: var(--progress-bg);
-            border-radius: 10px;
-            margin-bottom: 10px;
-            overflow: hidden;
-        }
+        .progress-container { width: 100%; height: 12px; background-color: var(--progress-bg); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
         .progress-bar { height: 100%; width: 0%; background-color: var(--progress-fill); transition: width 0.3s; }
 
-        #timer-text {
-            font-size: 1.2rem;
-            font-weight: 800;
-            color: var(--timer-color);
-            margin-bottom: 10px;
-            height: 1.5rem;
-        }
+        #timer-text { font-size: 1.2rem; font-weight: 800; color: var(--timer-color); margin-bottom: 10px; height: 1.5rem; }
 
         #play-btn, #replay-btn {
-            background: #2ecc71;
-            color: white;
-            border: none;
-            padding: 12px 30px; 
-            border-radius: 40px;
-            font-size: 1rem;
-            font-weight: 700;
-            cursor: pointer;
-            margin-bottom: 10px;
+            background: #2ecc71; color: white; border: none; padding: 12px 30px; border-radius: 40px;
+            font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 10px;
             box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
         }
         #replay-btn { background: #1a73e8; display: none; box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3); }
 
-        .grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px;
-            width: 100%;
-        }
+        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; width: 100%; }
 
         .chord-btn {
-            width: calc(25% - 10px); 
-            aspect-ratio: 1 / 1;
-            border-radius: 15px;
-            border: none;
-            cursor: pointer;
-            font-size: 2.8rem; 
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background-color 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            background-color: #dfe6e9; 
-            padding: 0;
-            position: relative;
+            width: calc(25% - 10px); aspect-ratio: 1 / 1; border-radius: 15px; border: none;
+            cursor: pointer; font-size: 2.8rem; display: flex; align-items: center; justify-content: center;
+            transition: background-color 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            background-color: #dfe6e9; padding: 0; position: relative;
         }
 
-        /* ICON SIZE FIX: Unified sizing for emoji and Octopus */
         .chord-btn span, .chord-btn img {
-            width: 70%;
-            height: 70%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            object-fit: contain;
-            /* Layout Fix: We use opacity instead of display:none to prevent shrinking */
-            opacity: 0; 
-            transition: opacity 0.2s;
+            width: 70%; height: 70%; display: flex; align-items: center; justify-content: center;
+            object-fit: contain; opacity: 0; transition: opacity 0.2s;
         }
 
-        /* Show content when active */
-        .chord-btn.active span, 
-        .chord-btn.active img { 
-            opacity: 1; 
-        }
+        .chord-btn.active span, .chord-btn.active img { opacity: 1; }
 
-        /* Background colors only applied when active */
+        /* Active Colors */
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
         .chord-btn.active.pink { background-color: #f48fb1; }
@@ -169,19 +115,18 @@
         .chord-btn.active.lightyellow { background-color: #fafad2; }
 
         .chord-btn img { mix-blend-mode: multiply; }
-
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.95rem; }
 
         @media (max-width: 400px) {
             .chord-btn { font-size: 2.2rem; }
-            .game-panel { min-height: 480px; }
+            .game-panel { min-height: 520px; }
         }
     </style>
 </head>
 <body>
 
 <div class="container">
-    
+   
     
 
     <div class="stats">
@@ -191,6 +136,14 @@
 
     <div class="game-panel">
         <div id="mode-label" class="mode-tag">Test Mode</div>
+        
+        <div class="level-select-container" id="selector-box">
+            Start at Level: 
+            <select id="level-select" onchange="changeStartingLevel()">
+                <!-- Generated by JS -->
+            </select>
+        </div>
+
         <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
         <div id="timer-text"></div>
         
@@ -198,24 +151,19 @@
         <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
         <div id="msg">Explore all sounds before playing!</div>
 
-        <div class="grid">
+        <div class="grid" id="button-grid">
             <button class="chord-btn active red" id="btn-red" onclick="handleInput('red')"><span>🦞</span></button>
             <button class="chord-btn active brown" id="btn-brown" onclick="handleInput('brown')"><span>🐻</span></button>
             <button class="chord-btn active pink" id="btn-pink" onclick="handleInput('pink')"><span>🐷</span></button>
-            <button class="chord-btn active purple" id="btn-purple" onclick="handleInput('purple')">
-                <img src="image_6.png" alt="Octopus">
-            </button>
-            
+            <button class="chord-btn active purple" id="btn-purple" onclick="handleInput('purple')"><img src="image_6.png" alt="Octopus"></button>
             <button class="chord-btn active orange" id="btn-orange" onclick="handleInput('orange')"><span>🦊</span></button>
             <button class="chord-btn active yellow" id="btn-yellow" onclick="handleInput('yellow')"><span>🐥</span></button>
             <button class="chord-btn active green" id="btn-green" onclick="handleInput('green')"><span>🐸</span></button>
             <button class="chord-btn active teal" id="btn-teal" onclick="handleInput('teal')"><span>🐬</span></button>
-
             <button class="chord-btn active grey-note" id="btn-grey" onclick="handleInput('grey')"><span>🐘</span></button>
             <button class="chord-btn active darkorange" id="btn-darkorange" onclick="handleInput('darkorange')"><span>🍊</span></button>
             <button class="chord-btn active darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')"><span>🥝</span></button>
             <button class="chord-btn active indigo" id="btn-indigo" onclick="handleInput('indigo')"><span>🫐</span></button>
-
             <button class="chord-btn active lavender" id="btn-lavender" onclick="handleInput('lavender')"><span>🍇</span></button>
             <button class="chord-btn active lightyellow" id="btn-lightyellow" onclick="handleInput('lightyellow')"><span>🍍</span></button>
         </div>
@@ -234,6 +182,24 @@
     let isGameActive = false;
     let timeLeft = 10;
     let timerInterval = null;
+
+    // Load Level Selector
+    const selector = document.getElementById('level-select');
+    progression.forEach((_, i) => {
+        if (i >= 1) { 
+            let opt = document.createElement('option');
+            opt.value = i + 1;
+            opt.innerHTML = `Level ${i + 1}`;
+            selector.appendChild(opt);
+        }
+    });
+
+    function changeStartingLevel() {
+        if (!isGameActive) {
+            gameLevel = parseInt(selector.value);
+            updateUI();
+        }
+    }
 
     async function loadSound(name) {
         try {
@@ -272,8 +238,10 @@
 
     function startRound() {
         isGameActive = true;
+        streak = 0;
         document.getElementById('play-btn').style.display = "none";
         document.getElementById('replay-btn').style.display = "block";
+        document.getElementById('selector-box').style.display = "none";
         document.getElementById('mode-label').innerText = "Game Mode";
         document.getElementById('mode-label').classList.add('game-on');
         updateUI(); 
@@ -303,16 +271,22 @@
             stopTimer();
             streak++;
             document.getElementById('msg').innerText = "Correct! ✨";
-            if (streak >= 20 && gameLevel < progression.length) {
-                gameLevel++; streak = 0; isGameActive = false;
-                updateUI();
-                document.getElementById('play-btn').style.display = "block";
-                document.getElementById('replay-btn').style.display = "none";
-                document.getElementById('mode-label').innerText = "Test Mode";
-                document.getElementById('mode-label').classList.remove('game-on');
+            
+            if (streak >= 20) {
+                if (gameLevel < progression.length) {
+                    gameLevel++;
+                    streak = 0;
+                    document.getElementById('msg').innerText = "LEVEL UP! Adding a new sound...";
+                    updateUI();
+                    setTimeout(nextQuestion, 2000); // Progresses automatically
+                } else {
+                    document.getElementById('msg').innerText = "MASTERED! You finished all levels!";
+                    isGameActive = false;
+                    setTimeout(() => location.reload(), 3000);
+                }
             } else {
                 updateUI();
-                setTimeout(nextQuestion, 1000);
+                setTimeout(nextQuestion, 800);
             }
         } else {
             stopTimer();
@@ -322,7 +296,10 @@
 
     function processWrong() {
         strikes++; streak = 0; updateUI();
-        if (strikes >= 3) { alert("Game Over!"); location.reload(); }
+        if (strikes >= 3) { 
+            document.getElementById('msg').innerText = "GAME OVER";
+            setTimeout(() => location.reload(), 2000); 
+        }
         else { setTimeout(nextQuestion, 1500); }
     }
 
