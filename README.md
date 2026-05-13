@@ -21,8 +21,7 @@
             color: var(--text-main);
             margin: 0;
             display: flex;
-            flex-direction: column;
-            align-items: center; 
+            justify-content: center;
             padding: 20px;
             min-height: 100vh;
         }
@@ -35,19 +34,17 @@
             align-items: center; 
         }
 
-        /* FIXED CENTERING FOR STATS */
+        /* NEW STATS STYLING - Moved inside or pinned to center */
         .stats { 
             display: flex; 
             justify-content: center; 
             align-items: center;
-            gap: 20px; 
-            margin: 40px auto 30px auto; 
+            gap: 40px; 
+            margin: 0 auto 30px auto; 
             width: 100%;
-            max-width: 400px;
         }
         
         .stat-group { 
-            flex: 1; /* Gives both sides equal weight to force true center */
             display: flex; 
             flex-direction: column; 
             align-items: center;
@@ -68,6 +65,7 @@
             width: 100%;
             min-height: 580px; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            margin-top: 20px;
         }
 
         .mode-tag {
@@ -122,7 +120,7 @@
 
         .chord-btn.active span, .chord-btn.active img { opacity: 1; }
 
-        /* Colors */
+        /* Icon Colors */
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
         .chord-btn.active.pink { background-color: #f48fb1; }
@@ -142,7 +140,7 @@
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 10px; font-size: 0.95rem; }
 
         @media (max-width: 400px) {
-            .stat-val { font-size: 4.5rem; }
+            .stat-val { font-size: 4rem; }
             .chord-btn { font-size: 2.2rem; }
             .game-panel { min-height: 520px; padding: 20px; }
         }
@@ -151,7 +149,7 @@
 <body>
 
 <div class="container">
-    <!-- Centered Stats Only (Headers removed to fix duplication) -->
+    <!-- STATS AREA -->
     <div class="stats">
         <div class="stat-group">
             <span id="streak" class="stat-val">0</span>
@@ -163,6 +161,7 @@
         </div>
     </div>
 
+    <!-- MAIN GAME PANEL -->
     <div class="game-panel">
         <div id="mode-label" class="mode-tag">Test Mode</div>
         
