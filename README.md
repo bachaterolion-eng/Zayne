@@ -120,7 +120,8 @@
             border-radius: 15px;
             border: none;
             cursor: pointer;
-            font-size: 4.5rem; 
+            /* FONT SIZE adjusted for mobile/desktop parity */
+            font-size: 2.8rem; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -130,11 +131,21 @@
             color: transparent; 
             padding: 0;
             overflow: hidden;
-            line-height: 1;
         }
 
+        /* Logic to make emojis behave like the Octopus image */
         .chord-btn.active { color: white !important; }
         
+        /* Unified Icon Sizing */
+        .chord-btn span, .chord-btn img {
+            width: 70%;
+            height: 70%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            object-fit: contain;
+        }
+
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
         .chord-btn.active.pink { background-color: #f48fb1; }
@@ -151,9 +162,6 @@
         .chord-btn.active.lightyellow { background-color: #fafad2; }
 
         .chord-btn img {
-            width: 95%;
-            height: 95%;
-            object-fit: contain;
             display: none; 
             background-color: transparent !important;
             mix-blend-mode: multiply;
@@ -162,13 +170,18 @@
         .chord-btn.active img { display: block !important; }
 
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.95rem; }
+
+        /* Media query for smaller phones */
+        @media (max-width: 400px) {
+            .chord-btn { font-size: 2.2rem; }
+        }
     </style>
 </head>
 <body>
 
 <div class="container">
-    
-    
+    <h1>PRODIGIES-EGUCHI</h1>
+    <div class="header-line"></div>
 
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
@@ -185,25 +198,25 @@
         <div id="msg">Explore all sounds before playing!</div>
 
         <div class="grid">
-            <button class="chord-btn active red" id="btn-red" onclick="handleInput('red')">🦞</button>
-            <button class="chord-btn active brown" id="btn-brown" onclick="handleInput('brown')">🐻</button>
-            <button class="chord-btn active pink" id="btn-pink" onclick="handleInput('pink')">🐷</button>
+            <button class="chord-btn active red" id="btn-red" onclick="handleInput('red')"><span>🦞</span></button>
+            <button class="chord-btn active brown" id="btn-brown" onclick="handleInput('brown')"><span>🐻</span></button>
+            <button class="chord-btn active pink" id="btn-pink" onclick="handleInput('pink')"><span>🐷</span></button>
             <button class="chord-btn active purple" id="btn-purple" onclick="handleInput('purple')">
                 <img src="image_6.png" alt="Octopus">
             </button>
             
-            <button class="chord-btn active orange" id="btn-orange" onclick="handleInput('orange')">🦊</button>
-            <button class="chord-btn active yellow" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
-            <button class="chord-btn active green" id="btn-green" onclick="handleInput('green')">🐸</button>
-            <button class="chord-btn active teal" id="btn-teal" onclick="handleInput('teal')">🐬</button>
+            <button class="chord-btn active orange" id="btn-orange" onclick="handleInput('orange')"><span>🦊</span></button>
+            <button class="chord-btn active yellow" id="btn-yellow" onclick="handleInput('yellow')"><span>🐥</span></button>
+            <button class="chord-btn active green" id="btn-green" onclick="handleInput('green')"><span>🐸</span></button>
+            <button class="chord-btn active teal" id="btn-teal" onclick="handleInput('teal')"><span>🐬</span></button>
 
-            <button class="chord-btn active grey-note" id="btn-grey" onclick="handleInput('grey')">🐘</button>
-            <button class="chord-btn active darkorange" id="btn-darkorange" onclick="handleInput('darkorange')">🍊</button>
-            <button class="chord-btn active darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')">🥝</button>
-            <button class="chord-btn active indigo" id="btn-indigo" onclick="handleInput('indigo')">🫐</button>
+            <button class="chord-btn active grey-note" id="btn-grey" onclick="handleInput('grey')"><span>🐘</span></button>
+            <button class="chord-btn active darkorange" id="btn-darkorange" onclick="handleInput('darkorange')"><span>🍊</span></button>
+            <button class="chord-btn active darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')"><span>🥝</span></button>
+            <button class="chord-btn active indigo" id="btn-indigo" onclick="handleInput('indigo')"><span>🫐</span></button>
 
-            <button class="chord-btn active lavender" id="btn-lavender" onclick="handleInput('lavender')">🍇</button>
-            <button class="chord-btn active lightyellow" id="btn-lightyellow" onclick="handleInput('lightyellow')">🍍</button>
+            <button class="chord-btn active lavender" id="btn-lavender" onclick="handleInput('lavender')"><span>🍇</span></button>
+            <button class="chord-btn active lightyellow" id="btn-lightyellow" onclick="handleInput('lightyellow')"><span>🍍</span></button>
         </div>
     </div>
 </div>
@@ -299,7 +312,6 @@
         if (!isGameActive) {
             playSound(choice);
             
-            // Clean up display names for multi-word colors
             let displayName = choice;
             if (choice === 'lightyellow') displayName = 'light yellow';
             if (choice === 'darkorange') displayName = 'dark orange';
