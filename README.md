@@ -27,11 +27,7 @@
 
         .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
 
-        h1 { color: #1a73e8; font-size: 1.8rem; text-align: center; margin: 20px 0 10px 0; width: 100%; }
-
-        .header-line { width: 100%; height: 1px; background: #ffffff; margin-bottom: 20px; opacity: 0.3; }
-
-        .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
+        .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; margin-top: 20px; }
         .stat-group { display: flex; flex-direction: column; align-items: center; }
         .stat-val { font-size: 5rem; font-weight: 800; line-height: 1; }
         .stat-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; }
@@ -126,9 +122,6 @@
 <body>
 
 <div class="container">
-   
-    
-
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
         <div class="stat-group"><span id="strikes" class="stat-val" style="color:#ff5252">0</span><span class="stat-label">Strikes</span></div>
@@ -175,7 +168,7 @@
     const soundBuffers = {};
     const progression = ['red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey', 'darkorange', 'darkgreen', 'indigo', 'lavender', 'lightyellow'];
     
-    let gameLevel = 2; 
+    let gameLevel = 1; 
     let streak = 0;
     let strikes = 0;
     let currentTarget = null;
@@ -186,12 +179,10 @@
     // Load Level Selector
     const selector = document.getElementById('level-select');
     progression.forEach((_, i) => {
-        if (i >= 1) { 
-            let opt = document.createElement('option');
-            opt.value = i + 1;
-            opt.innerHTML = `Level ${i + 1}`;
-            selector.appendChild(opt);
-        }
+        let opt = document.createElement('option');
+        opt.value = i + 1;
+        opt.innerHTML = `Level ${i + 1}`;
+        selector.appendChild(opt);
     });
 
     function changeStartingLevel() {
@@ -278,7 +269,7 @@
                     streak = 0;
                     document.getElementById('msg').innerText = "LEVEL UP! Adding a new sound...";
                     updateUI();
-                    setTimeout(nextQuestion, 2000); // Progresses automatically
+                    setTimeout(nextQuestion, 2000); 
                 } else {
                     document.getElementById('msg').innerText = "MASTERED! You finished all levels!";
                     isGameActive = false;
