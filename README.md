@@ -161,7 +161,7 @@
             <button class="chord-btn brown" id="btn-brown" onclick="handleInput('brown')">🐻</button>
             <button class="chord-btn pink" id="btn-pink" onclick="handleInput('pink')">🐷</button>
             <button class="chord-btn purple" id="btn-purple" onclick="handleInput('purple')">
-                <img src="image_5.png" alt="Octopus">
+                <img src="image_6.png" alt="Octopus">
             </button>
             <button class="chord-btn orange" id="btn-orange" onclick="handleInput('orange')"> foxes </button>
             <button class="chord-btn yellow" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
