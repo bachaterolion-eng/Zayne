@@ -58,7 +58,6 @@
             width: 100%;
         }
 
-        /* Mode Indicator Tag */
         .mode-tag {
             background: #dfe6e9;
             color: #636e72;
@@ -134,10 +133,10 @@
             line-height: 1;
         }
 
+        /* Buttons are ACTIVE by default now */
         .chord-btn.active { color: white !important; }
         .chord-btn:active { transform: scale(0.92); }
         
-        /* Colors */
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
         .chord-btn.active.pink { background-color: #f48fb1; }
@@ -170,7 +169,7 @@
 <body>
 
 <div class="container">
-   
+    
     
 
     <div class="stats">
@@ -185,28 +184,28 @@
         
         <button id="play-btn" onclick="startRound()">Start Game</button>
         <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
-        <div id="msg">Tap icons to hear their sounds</div>
+        <div id="msg">Explore the sounds before playing!</div>
 
         <div class="grid">
-            <button class="chord-btn red" id="btn-red" onclick="handleInput('red')">🦞</button>
-            <button class="chord-btn brown" id="btn-brown" onclick="handleInput('brown')">🐻</button>
-            <button class="chord-btn pink" id="btn-pink" onclick="handleInput('pink')">🐷</button>
-            <button class="chord-btn purple" id="btn-purple" onclick="handleInput('purple')">
+            <button class="chord-btn active red" id="btn-red" onclick="handleInput('red')">🦞</button>
+            <button class="chord-btn active brown" id="btn-brown" onclick="handleInput('brown')">🐻</button>
+            <button class="chord-btn active pink" id="btn-pink" onclick="handleInput('pink')">🐷</button>
+            <button class="chord-btn active purple" id="btn-purple" onclick="handleInput('purple')">
                 <img src="image_6.png" alt="Octopus">
             </button>
             
-            <button class="chord-btn orange" id="btn-orange" onclick="handleInput('orange')">🦊</button>
-            <button class="chord-btn yellow" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
-            <button class="chord-btn green" id="btn-green" onclick="handleInput('green')">🐸</button>
-            <button class="chord-btn teal" id="btn-teal" onclick="handleInput('teal')">🐬</button>
+            <button class="chord-btn active orange" id="btn-orange" onclick="handleInput('orange')">🦊</button>
+            <button class="chord-btn active yellow" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
+            <button class="chord-btn active green" id="btn-green" onclick="handleInput('green')">🐸</button>
+            <button class="chord-btn active teal" id="btn-teal" onclick="handleInput('teal')">🐬</button>
 
-            <button class="chord-btn grey-note" id="btn-grey" onclick="handleInput('grey')">🐘</button>
-            <button class="chord-btn darkorange" id="btn-darkorange" onclick="handleInput('darkorange')">🍊</button>
-            <button class="chord-btn darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')">🥝</button>
-            <button class="chord-btn indigo" id="btn-indigo" onclick="handleInput('indigo')">🫐</button>
+            <button class="chord-btn active grey-note" id="btn-grey" onclick="handleInput('grey')">🐘</button>
+            <button class="chord-btn active darkorange" id="btn-darkorange" onclick="handleInput('darkorange')">🍊</button>
+            <button class="chord-btn active darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')">🥝</button>
+            <button class="chord-btn active indigo" id="btn-indigo" onclick="handleInput('indigo')">🫐</button>
 
-            <button class="chord-btn lavender" id="btn-lavender" onclick="handleInput('lavender')">🍇</button>
-            <button class="chord-btn rust" id="btn-rust" onclick="handleInput('rust')">🍑</button>
+            <button class="chord-btn active lavender" id="btn-lavender" onclick="handleInput('lavender')">🍇</button>
+            <button class="chord-btn active rust" id="btn-rust" onclick="handleInput('rust')">🍑</button>
         </div>
     </div>
 </div>
@@ -220,7 +219,8 @@
         'darkorange', 'darkgreen', 'indigo', 'lavender', 'rust'
     ];
     
-    let activeCount = 2; 
+    // START WITH 2 FOR GAMEPLAY, BUT ALL ARE VISIBLE VIA CSS "ACTIVE" CLASS
+    let gameActiveCount = 2; 
     let streak = 0;
     let strikes = 0;
     let currentTarget = null;
@@ -249,7 +249,7 @@
     function replaySound() { 
         if (currentTarget) {
             playSound(currentTarget);
-            resetTimer();
+            startTimer();
         }
     }
 
@@ -263,8 +263,6 @@
             if (timeLeft <= 0) handleTimeout();
         }, 1000);
     }
-
-    function resetTimer() { if(isGameActive) startTimer(); }
 
     function stopTimer() {
         clearInterval(timerInterval);
@@ -287,43 +285,36 @@
     }
 
     function nextQuestion() {
-        const available = progression.slice(0, activeCount);
+        // Game only quizzes you on the items unlocked by your level
+        const available = progression.slice(0, gameActiveCount);
         currentTarget = available[Math.floor(Math.random() * available.length)];
         playSound(currentTarget);
-        document.getElementById('msg').innerText = "Listen... Which one was that?";
+        document.getElementById('msg').innerText = "Which one was that?";
         startTimer();
     }
 
     function handleInput(choice) {
-        const btnId = (choice === 'grey') ? 'btn-grey' : `btn-${choice}`;
-        const btn = document.getElementById(btnId);
-        
-        if (!btn.classList.contains('active')) return;
-
-        // If in TEST MODE (Game not active)
         if (!isGameActive) {
             playSound(choice);
             document.getElementById('msg').innerText = "Testing: " + choice;
             return;
         }
 
-        // If in GAME MODE
         if (choice === currentTarget) {
             stopTimer();
             streak++;
             document.getElementById('msg').innerText = "Correct! ✨";
             
-            if (streak >= 20 && activeCount < progression.length) {
-                activeCount++;
+            if (streak >= 20 && gameActiveCount < progression.length) {
+                gameActiveCount++;
                 streak = 0;
-                isGameActive = false; // Revert to test mode for the new level
+                isGameActive = false;
                 updateUI();
                 document.getElementById('play-btn').style.display = "block";
-                document.getElementById('play-btn').innerText = "Start Next Level";
                 document.getElementById('replay-btn').style.display = "none";
                 document.getElementById('mode-label').innerText = "Test Mode";
                 document.getElementById('mode-label').classList.remove('game-on');
-                document.getElementById('msg').innerText = "Level Up! Practice the new sound.";
+                document.getElementById('msg').innerText = "New sound unlocked in Game Mode!";
             } else {
                 updateUI();
                 setTimeout(nextQuestion, 1000);
@@ -340,7 +331,7 @@
         streak = 0;
         updateUI();
         if (strikes >= 3) {
-            alert("Game Over! Let's practice some more.");
+            alert("3 strikes! Practice some more in Test Mode.");
             location.reload();
         } else {
             setTimeout(nextQuestion, 1500);
@@ -351,16 +342,6 @@
         document.getElementById('streak').innerText = streak;
         document.getElementById('strikes').innerText = strikes;
         document.getElementById('progress-bar').style.width = (streak * 5) + "%";
-        
-        progression.forEach((color, i) => {
-            const btnId = (color === 'grey') ? 'btn-grey' : `btn-${color}`;
-            const btn = document.getElementById(btnId);
-            if (i < activeCount) {
-                btn.classList.add('active');
-            } else {
-                btn.classList.remove('active');
-            }
-        });
     }
 
     updateUI();
