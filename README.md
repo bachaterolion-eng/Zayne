@@ -126,16 +126,16 @@
             justify-content: center;
             transition: all 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            background-color: #dfe6e9; /* Default hidden color */
+            background-color: #dfe6e9;
             color: transparent; 
             padding: 0;
             overflow: hidden;
             line-height: 1;
         }
 
-        /* Active buttons show color and emoji */
         .chord-btn.active { color: white !important; }
         
+        /* Updated Colors */
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
         .chord-btn.active.pink { background-color: #f48fb1; }
@@ -149,7 +149,7 @@
         .chord-btn.active.darkgreen { background-color: #1b5e20; }
         .chord-btn.active.indigo { background-color: #3f51b5; }
         .chord-btn.active.lavender { background-color: #9b59b6; }
-        .chord-btn.active.rust { background-color: #d35400; }
+        .chord-btn.active.lightyellow { background-color: #fafad2; }
 
         .chord-btn img {
             width: 95%;
@@ -169,7 +169,7 @@
 
 <div class="container">
     
-   
+    
 
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
@@ -193,7 +193,7 @@
                 <img src="image_6.png" alt="Octopus">
             </button>
             
-            <button class="chord-btn active orange" id="btn-orange" onclick="handleInput('orange')"> foxes 🦊</button>
+            <button class="chord-btn active orange" id="btn-orange" onclick="handleInput('orange')">🦊</button>
             <button class="chord-btn active yellow" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
             <button class="chord-btn active green" id="btn-green" onclick="handleInput('green')">🐸</button>
             <button class="chord-btn active teal" id="btn-teal" onclick="handleInput('teal')">🐬</button>
@@ -204,7 +204,7 @@
             <button class="chord-btn active indigo" id="btn-indigo" onclick="handleInput('indigo')">🫐</button>
 
             <button class="chord-btn active lavender" id="btn-lavender" onclick="handleInput('lavender')">🍇</button>
-            <button class="chord-btn active rust" id="btn-rust" onclick="handleInput('rust')">🍑</button>
+            <button class="chord-btn active lightyellow" id="btn-lightyellow" onclick="handleInput('lightyellow')">🍍</button>
         </div>
     </div>
 </div>
@@ -213,12 +213,13 @@
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const soundBuffers = {};
     
+    // Pineapple file is now lightyellow.wav
     const progression = [
         'red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey',
-        'darkorange', 'darkgreen', 'indigo', 'lavender', 'rust'
+        'darkorange', 'darkgreen', 'indigo', 'lavender', 'lightyellow'
     ];
     
-    let gameLevel = 2; // Only Red and Brown start the game
+    let gameLevel = 2; 
     let streak = 0;
     let strikes = 0;
     let currentTarget = null;
@@ -279,10 +280,7 @@
         document.getElementById('replay-btn').style.display = "block";
         document.getElementById('mode-label').innerText = "Game Mode";
         document.getElementById('mode-label').classList.add('game-on');
-        
-        // CRITICAL: When Game Starts, hide everything except the first 2 (gameLevel)
         updateUI(); 
-        
         nextQuestion();
     }
 
@@ -295,15 +293,14 @@
     }
 
     function handleInput(choice) {
-        const btnId = (choice === 'grey') ? 'btn-grey' : `btn-${choice}`;
+        const btnId = choice === 'grey' ? 'btn-grey' : `btn-${choice}`;
         const btn = document.getElementById(btnId);
         
-        // If the button is greyed out (not active), don't let them click it
         if (!btn.classList.contains('active')) return;
 
         if (!isGameActive) {
             playSound(choice);
-            document.getElementById('msg').innerText = "Testing: " + choice;
+            document.getElementById('msg').innerText = "Testing: " + (choice === 'lightyellow' ? '🍍' : choice);
             return;
         }
 
@@ -316,7 +313,7 @@
                 gameLevel++;
                 streak = 0;
                 isGameActive = false;
-                updateUI(); // This will reveal the next animal in Test Mode
+                updateUI(); 
                 document.getElementById('play-btn').style.display = "block";
                 document.getElementById('play-btn').innerText = "Start Next Level";
                 document.getElementById('replay-btn').style.display = "none";
@@ -351,16 +348,13 @@
         document.getElementById('strikes').innerText = strikes;
         document.getElementById('progress-bar').style.width = (streak * 5) + "%";
 
-        // Logic to show/hide buttons based on mode
         progression.forEach((color, i) => {
-            const btnId = (color === 'grey') ? 'btn-grey' : `btn-${color}`;
+            const btnId = color === 'grey' ? 'btn-grey' : `btn-${color}`;
             const btn = document.getElementById(btnId);
             
             if (!isGameActive) {
-                // IN TEST MODE: Show everything
                 btn.classList.add('active');
             } else {
-                // IN GAME MODE: Only show items up to current gameLevel
                 if (i < gameLevel) {
                     btn.classList.add('active');
                 } else {
@@ -370,7 +364,7 @@
         });
     }
 
-    updateUI(); // Run once on load to ensure Test Mode starts with all visible
+    updateUI();
 </script>
 </body>
 </html>
