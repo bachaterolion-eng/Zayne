@@ -1,4 +1,3 @@
-
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -32,7 +31,7 @@
             color: #1a73e8; 
             font-size: 1.8rem; 
             text-align: center; 
-            margin: 0 0 10px 0; 
+            margin: 20px 0 10px 0; 
             width: 100%; 
         }
 
@@ -109,11 +108,13 @@
             justify-content: center;
             transition: transform 0.1s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            background-color: rgba(0, 0, 0, 0.05); /* Default grey for locked */
-            color: transparent; /* Default hidden text */
+            background-color: #dfe6e9; 
+            color: transparent; 
+            padding: 0;
+            overflow: hidden;
         }
 
-        /* Active Levels - Colors and Emojis show up ONLY here */
+        /* Logic: Only show color and emoji/image when 'active' class is present */
         .chord-btn.active.red { background-color: #ff5252; color: white; }
         .chord-btn.active.brown { background-color: #8d6e63; color: white; }
         .chord-btn.active.pink { background-color: #f48fb1; color: white; }
@@ -125,14 +126,16 @@
         .chord-btn.active.grey-note { background-color: #b0bec5; color: white; }
 
         .chord-btn img {
-            width: 80%;
-            height: 80%;
+            width: 85%;
+            height: 85%;
             object-fit: contain;
-            display: none; /* Hidden by default */
+            display: none; 
+            background-color: transparent !important;
+            mix-blend-mode: multiply; /* Blends away any stubborn white edges */
         }
 
         .chord-btn.active img {
-            display: block; /* Shown only when active */
+            display: block; 
         }
 
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; }
@@ -141,7 +144,8 @@
 <body>
 
 <div class="container">
-
+    <h1>PRODIGIES-EGUCHI</h1>
+    <div class="header-line"></div>
 
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
@@ -163,7 +167,7 @@
             <button class="chord-btn purple" id="btn-purple" onclick="handleInput('purple')">
                 <img src="image_6.png" alt="Octopus">
             </button>
-            <button class="chord-btn orange" id="btn-orange" onclick="handleInput('orange')"> foxes </button>
+            <button class="chord-btn orange" id="btn-orange" onclick="handleInput('orange')">🦊</button>
             <button class="chord-btn yellow" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
             <button class="chord-btn green" id="btn-green" onclick="handleInput('green')">🐸</button>
             <button class="chord-btn teal" id="btn-teal" onclick="handleInput('teal')">🐬</button>
@@ -252,7 +256,9 @@
     }
 
     function handleInput(choice) {
-        const btn = document.getElementById(`btn-${choice === 'grey' ? 'grey' : choice}`);
+        const btnId = (choice === 'grey') ? 'btn-grey' : `btn-${choice}`;
+        const btn = document.getElementById(btnId);
+        
         if (!btn.classList.contains('active')) return;
 
         if (!isGameActive) {
@@ -302,7 +308,7 @@
         document.getElementById('progress-bar').style.width = (streak * 5) + "%";
         
         progression.forEach((color, i) => {
-            const btnId = color === 'grey' ? 'btn-grey' : `btn-${color}`;
+            const btnId = (color === 'grey') ? 'btn-grey' : `btn-${color}`;
             const btn = document.getElementById(btnId);
             if (i < activeCount) {
                 btn.classList.add('active');
@@ -316,4 +322,3 @@
 </script>
 </body>
 </html>
-
