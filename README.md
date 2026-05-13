@@ -89,7 +89,7 @@
         .chord-btn {
             width: calc(25% - 10px); aspect-ratio: 1 / 1; border-radius: 15px; border: none;
             cursor: pointer; font-size: 2.8rem; display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s, background-color 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             background-color: #dfe6e9; padding: 0; position: relative;
         }
 
@@ -99,9 +99,6 @@
         }
 
         .chord-btn.active span, .chord-btn.active img { opacity: 1; }
-
-        /* Highlight effect for testing new sounds */
-        .chord-btn.highlight { transform: scale(1.1); border: 3px solid #2ecc71; z-index: 10; }
 
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
@@ -116,7 +113,6 @@
         .chord-btn.active.darkgreen { background-color: #1b5e20; }
         .chord-btn.active.indigo { background-color: #3f51b5; }
         .chord-btn.active.lavender { background-color: #9b59b6; }
-        /* CHANGED: Darkened Light Yellow to Khaki #f0e68c */
         .chord-btn.active.lightyellow { background-color: #f0e68c; }
 
         .chord-btn img { mix-blend-mode: multiply; }
@@ -182,7 +178,7 @@
     let strikes = 0;
     let currentTarget = null;
     let isGameActive = false;
-    let isTestRound = false; // New state for round testing
+    let isTestRound = false; 
     let timeLeft = 10;
     let timerInterval = null;
 
@@ -222,7 +218,7 @@
     function replaySound() { if (currentTarget) { playSound(currentTarget); startTimer(); } }
 
     function startTimer() {
-        if (isTestRound) return; // No timer during test preview
+        if (isTestRound) return; 
         clearInterval(timerInterval);
         timeLeft = 10;
         document.getElementById('timer-text').innerText = `Time: ${timeLeft}s`;
@@ -237,7 +233,6 @@
 
     function handleTimeout() { stopTimer(); document.getElementById('msg').innerText = "Too slow! ⏰"; processWrong(); }
 
-    // First, show the new sound and let them test it
     function prepareRound() {
         isGameActive = true;
         isTestRound = true;
@@ -252,24 +247,16 @@
         
         updateUI();
         
-        // Highlight the latest sound in the progression for this level
         const newColor = progression[gameLevel - 1];
-        const btnId = newColor === 'grey' ? 'btn-grey' : `btn-${newColor}`;
-        document.getElementById(btnId).classList.add('highlight');
-        
         document.getElementById('msg').innerText = `Level ${gameLevel}: Practice the ${newColor} sound!`;
     }
 
-    // Then, actually start the timer/round
     function startActualGame() {
         isTestRound = false;
         document.getElementById('begin-round-btn').style.display = "none";
         document.getElementById('replay-btn').style.display = "block";
         document.getElementById('mode-label').innerText = "Game Mode";
         document.getElementById('mode-label').className = "mode-tag game-on";
-        
-        // Remove highlights
-        document.querySelectorAll('.chord-btn').forEach(b => b.classList.remove('highlight'));
         
         nextQuestion();
     }
@@ -287,7 +274,6 @@
         const btn = document.getElementById(btnId);
         if (!btn.classList.contains('active')) return;
 
-        // If in "Test Round" or "Free Play", just play the sound
         if (!isGameActive || isTestRound) {
             playSound(choice);
             document.getElementById('msg').innerText = "Testing: " + choice;
