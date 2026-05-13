@@ -82,34 +82,35 @@
 
         .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; width: 100%; }
 
+        /* Modified CSS to hide inactive buttons completely */
         .chord-btn {
             width: calc(25% - 10px); aspect-ratio: 1 / 1; border-radius: 15px; border: none;
-            cursor: pointer; font-size: 2.8rem; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 2.8rem; display: none; align-items: center; justify-content: center;
             transition: background-color 0.2s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             background-color: #dfe6e9; padding: 0; position: relative;
         }
 
+        .chord-btn.active { display: flex; }
+
         .chord-btn span, .chord-btn img {
             width: 70%; height: 70%; display: flex; align-items: center; justify-content: center;
-            object-fit: contain; opacity: 0; transition: opacity 0.2s;
+            object-fit: contain;
         }
 
-        .chord-btn.active span, .chord-btn.active img { opacity: 1; }
-
-        .chord-btn.active.red { background-color: #ff5252; }
-        .chord-btn.active.brown { background-color: #8d6e63; }
-        .chord-btn.active.pink { background-color: #f48fb1; }
-        .chord-btn.active.purple { background-color: #ba68c8; }
-        .chord-btn.active.orange { background-color: #ffb74d; }
-        .chord-btn.active.yellow { background-color: #fff176; }
-        .chord-btn.active.green { background-color: #81c784; }
-        .chord-btn.active.teal { background-color: #4db6ac; }
-        .chord-btn.active.grey-note { background-color: #b0bec5; }
-        .chord-btn.active.darkorange { background-color: #e67e22; }
-        .chord-btn.active.darkgreen { background-color: #1b5e20; }
-        .chord-btn.active.indigo { background-color: #3f51b5; }
-        .chord-btn.active.lavender { background-color: #9b59b6; }
-        .chord-btn.active.lightyellow { background-color: #fafad2; }
+        .chord-btn.red { background-color: #ff5252; }
+        .chord-btn.brown { background-color: #8d6e63; }
+        .chord-btn.pink { background-color: #f48fb1; }
+        .chord-btn.purple { background-color: #ba68c8; }
+        .chord-btn.orange { background-color: #ffb74d; }
+        .chord-btn.yellow { background-color: #fff176; }
+        .chord-btn.green { background-color: #81c784; }
+        .chord-btn.teal { background-color: #4db6ac; }
+        .chord-btn.grey-note { background-color: #b0bec5; }
+        .chord-btn.darkorange { background-color: #e67e22; }
+        .chord-btn.darkgreen { background-color: #1b5e20; }
+        .chord-btn.indigo { background-color: #3f51b5; }
+        .chord-btn.lavender { background-color: #9b59b6; }
+        .chord-btn.lightyellow { background-color: #fafad2; }
 
         .chord-btn img { mix-blend-mode: multiply; }
         #msg { font-weight: 600; color: #636e72; min-height: 1.5rem; text-align: center; margin-top: 5px; font-size: 0.95rem; }
@@ -143,7 +144,6 @@
         <div class="progress-container"><div id="progress-bar" class="progress-bar"></div></div>
         <div id="timer-text"></div>
         
-        <!-- Action Buttons -->
         <button id="play-btn" onclick="startRound()">Start Game</button>
         <button id="replay-btn" onclick="replaySound()">Replay Sound</button>
         
@@ -253,7 +253,7 @@
 
         if (!isGameActive) {
             playSound(choice);
-            document.getElementById('msg').innerText = "Testing: " + choice;
+            document.getElementById('msg').innerText = "Practice: " + choice;
             return;
         }
 
@@ -266,7 +266,7 @@
                 if (gameLevel < progression.length) {
                     gameLevel++;
                     streak = 0;
-                    isGameActive = false; // Transition back to Test/Practice Mode
+                    isGameActive = false; 
                     updateUI();
                     document.getElementById('msg').innerText = "LEVEL UP! Practice the new sound!";
                 } else {
@@ -314,7 +314,7 @@
             document.getElementById('timer-text').innerText = "";
         }
 
-        // Fix: Buttons now ONLY show up to the current level in BOTH modes
+        // Strictly only show buttons up to the current level
         progression.forEach((color, i) => {
             const btnId = color === 'grey' ? 'btn-grey' : `btn-${color}`;
             const btn = document.getElementById(btnId);
