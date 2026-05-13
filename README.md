@@ -89,7 +89,6 @@
         }
         #replay-btn { background: #1a73e8; display: none; }
 
-        /* Updated to Flexbox for centering the last row */
         .grid {
             display: flex;
             flex-wrap: wrap;
@@ -100,13 +99,13 @@
         }
 
         .chord-btn {
-            /* Width calculation for 4 items per row minus gaps */
             width: calc(25% - 10px); 
             aspect-ratio: 1 / 1;
             border-radius: 15px;
             border: none;
             cursor: pointer;
-            font-size: 2.5rem; /* Smaller font to fit 4 per row */
+            /* BIGGER EMOJI SIZE HERE */
+            font-size: 4.5rem; 
             display: flex;
             align-items: center;
             justify-content: center;
@@ -116,6 +115,7 @@
             color: transparent; 
             padding: 0;
             overflow: hidden;
+            line-height: 1;
         }
 
         .chord-btn.active { color: white !important; }
@@ -137,8 +137,9 @@
         .chord-btn.active.rust { background-color: #d35400; }
 
         .chord-btn img {
-            width: 85%;
-            height: 85%;
+            /* BIGGER OCTOPUS IMAGE HERE */
+            width: 95%;
+            height: 95%;
             object-fit: contain;
             display: none; 
             background-color: transparent !important;
@@ -170,7 +171,6 @@
         <div id="msg">Practice Mode: Tap icons to learn</div>
 
         <div class="grid">
-            <!-- Row 1 -->
             <button class="chord-btn red" id="btn-red" onclick="handleInput('red')">🦞</button>
             <button class="chord-btn brown" id="btn-brown" onclick="handleInput('brown')">🐻</button>
             <button class="chord-btn pink" id="btn-pink" onclick="handleInput('pink')">🐷</button>
@@ -178,19 +178,16 @@
                 <img src="image_6.png" alt="Octopus">
             </button>
             
-            <!-- Row 2 -->
             <button class="chord-btn orange" id="btn-orange" onclick="handleInput('orange')">🦊</button>
             <button class="chord-btn yellow" id="btn-yellow" onclick="handleInput('yellow')">🐥</button>
             <button class="chord-btn green" id="btn-green" onclick="handleInput('green')">🐸</button>
             <button class="chord-btn teal" id="btn-teal" onclick="handleInput('teal')">🐬</button>
 
-            <!-- Row 3 -->
             <button class="chord-btn grey-note" id="btn-grey" onclick="handleInput('grey')">🐘</button>
             <button class="chord-btn darkorange" id="btn-darkorange" onclick="handleInput('darkorange')">🍊</button>
             <button class="chord-btn darkgreen" id="btn-darkgreen" onclick="handleInput('darkgreen')">🥝</button>
             <button class="chord-btn indigo" id="btn-indigo" onclick="handleInput('indigo')">🫐</button>
 
-            <!-- Row 4 (Centered because of flexbox) -->
             <button class="chord-btn lavender" id="btn-lavender" onclick="handleInput('lavender')">🍇</button>
             <button class="chord-btn rust" id="btn-rust" onclick="handleInput('rust')">🍑</button>
         </div>
