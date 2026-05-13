@@ -126,23 +126,22 @@
             justify-content: center;
             transition: all 0.2s;
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            background-color: #dfe6e9;
-            color: transparent; 
+            background-color: #dfe6e9; /* Default inactive color */
             padding: 0;
             overflow: hidden;
         }
 
-        /* The fix for image_9.png: hide contents by default */
+        /* Icon Container Sizing */
         .chord-btn span, .chord-btn img {
             width: 70%;
             height: 70%;
-            display: none; /* Hidden when button is inactive */
+            display: none; /* Hide contents by default */
             align-items: center;
             justify-content: center;
             object-fit: contain;
         }
 
-        /* Only show contents when the button has the 'active' class */
+        /* Show content and color only when active */
         .chord-btn.active span, 
         .chord-btn.active img { 
             display: flex !important; 
@@ -164,7 +163,6 @@
         .chord-btn.active.lightyellow { background-color: #fafad2; }
 
         .chord-btn img {
-            background-color: transparent !important;
             mix-blend-mode: multiply;
         }
 
@@ -178,8 +176,8 @@
 <body>
 
 <div class="container">
-    
-    
+    <h1>PRODIGIES-EGUCHI</h1>
+    <div class="header-line"></div>
 
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
@@ -309,12 +307,10 @@
 
         if (!isGameActive) {
             playSound(choice);
-            
             let displayName = choice;
             if (choice === 'lightyellow') displayName = 'light yellow';
             if (choice === 'darkorange') displayName = 'dark orange';
             if (choice === 'darkgreen') displayName = 'dark green';
-            
             document.getElementById('msg').innerText = "Testing: " + displayName;
             return;
         }
@@ -368,7 +364,7 @@
             const btn = document.getElementById(btnId);
             
             if (!isGameActive) {
-                btn.classList.add('active');
+                btn.classList.add('active'); // In Test Mode, everything is active
             } else {
                 if (i < gameLevel) {
                     btn.classList.add('active');
