@@ -135,7 +135,6 @@
 
         .chord-btn.active { color: white !important; }
         
-        /* Updated Colors */
         .chord-btn.active.red { background-color: #ff5252; }
         .chord-btn.active.brown { background-color: #8d6e63; }
         .chord-btn.active.pink { background-color: #f48fb1; }
@@ -213,7 +212,6 @@
     const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
     const soundBuffers = {};
     
-    // Pineapple file is now lightyellow.wav
     const progression = [
         'red', 'brown', 'pink', 'purple', 'orange', 'yellow', 'green', 'teal', 'grey',
         'darkorange', 'darkgreen', 'indigo', 'lavender', 'lightyellow'
@@ -300,7 +298,14 @@
 
         if (!isGameActive) {
             playSound(choice);
-            document.getElementById('msg').innerText = "Testing: " + (choice === 'lightyellow' ? '🍍' : choice);
+            
+            // Clean up display names for multi-word colors
+            let displayName = choice;
+            if (choice === 'lightyellow') displayName = 'light yellow';
+            if (choice === 'darkorange') displayName = 'dark orange';
+            if (choice === 'darkgreen') displayName = 'dark green';
+            
+            document.getElementById('msg').innerText = "Testing: " + displayName;
             return;
         }
 
