@@ -33,19 +33,18 @@
 
         .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 15px; }
         .stat-group { display: flex; flex-direction: column; align-items: center; }
-        /* Reduced from 5rem to 2.5rem */
         .stat-val { font-size: 2.5rem; font-weight: 800; line-height: 1; }
         .stat-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; }
 
         .game-panel {
             background-color: var(--panel-bg);
-            padding: 25px;
+            padding: 25px 25px 40px 25px; /* Added bottom padding for breathing room */
             border-radius: 40px;
             display: flex;
             flex-direction: column;
             align-items: center;
             width: 100%;
-            min-height: 540px; 
+            height: auto; /* Changed from min-height to auto so it grows with zoom */
         }
 
         .mode-tag {
@@ -72,7 +71,6 @@
             cursor: pointer;
         }
 
-        /* Reduced margins to tighten spacing */
         .progress-container { width: 100%; height: 12px; background-color: var(--progress-bg); border-radius: 10px; margin-bottom: 5px; overflow: hidden; }
         .progress-bar { height: 100%; width: 0%; background-color: var(--progress-fill); transition: width 0.3s; }
 
@@ -122,7 +120,6 @@
 
         @media (max-width: 400px) {
             .chord-btn { font-size: 2.2rem; }
-            .game-panel { min-height: 500px; }
         }
     </style>
 </head>
