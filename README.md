@@ -127,7 +127,7 @@
 <body>
 <div class="container">
     <h1>CHROMACHORDS</h1>
-    <div class="header-line"></div>
+    
     
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
