@@ -27,9 +27,9 @@
 
         .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
 
-        h1 { color: #1a73e8; font-size: 2.2rem; text-align: center; margin: 10px 0 20px 0; width: 100%; letter-spacing: 2px; }
+        h1 { color: #1a73e8; font-size: 2.2rem; text-align: center; margin: 10px 0 5px 0; width: 100%; letter-spacing: 2px; }
 
-        .header-line { width: 100%; height: 1px; background: #ffffff; margin-bottom: 20px; opacity: 0.3; }
+        .header-line { width: 100%; height: 2px; background: #1a73e8; margin-bottom: 20px; opacity: 0.5; width: 80%; }
 
         .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
         .stat-group { display: flex; flex-direction: column; align-items: center; }
@@ -127,6 +127,7 @@
 <body>
 <div class="container">
     <h1>CHROMACHORDS</h1>
+    <div class="header-line"></div>
     
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
@@ -241,6 +242,7 @@
         streak = 0;
         
         document.getElementById('play-btn').style.display = "none";
+        document.getElementById('replay-btn').style.display = "none"; // Ensure Replay is hidden
         document.getElementById('begin-round-btn').style.display = "block";
         document.getElementById('selector-box').style.display = "none";
         
@@ -250,7 +252,7 @@
         updateUI();
         
         const newColor = progression[gameLevel - 1];
-        document.getElementById('msg').innerText = `Level ${gameLevel}: Practice the ${newColor} sound!`;
+        document.getElementById('msg').innerText = `Level ${gameLevel}: Practice the sounds!`;
     }
 
     function startActualGame() {
@@ -278,7 +280,7 @@
 
         if (!isGameActive || isTestRound) {
             playSound(choice);
-            document.getElementById('msg').innerText = "Testing: " + choice;
+            if(isTestRound) document.getElementById('msg').innerText = "Practice: " + choice;
             return;
         }
 
