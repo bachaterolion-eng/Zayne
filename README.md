@@ -2,7 +2,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Piano Pitch Training</title>
+    <title>CHROMACHORDS</title>
     <style>
         * { box-sizing: border-box; }
         :root {
@@ -27,7 +27,7 @@
 
         .container { width: 100%; max-width: 500px; display: flex; flex-direction: column; align-items: center; }
 
-        h1 { color: #1a73e8; font-size: 1.8rem; text-align: center; margin: 20px 0 10px 0; width: 100%; }
+        h1 { color: #1a73e8; font-size: 2.2rem; text-align: center; margin: 10px 0 20px 0; width: 100%; letter-spacing: 2px; }
 
         .header-line { width: 100%; height: 1px; background: #ffffff; margin-bottom: 20px; opacity: 0.3; }
 
@@ -126,6 +126,8 @@
 </head>
 <body>
 <div class="container">
+    <h1>CHROMACHORDS</h1>
+    
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
         <div class="stat-group"><span id="strikes" class="stat-val" style="color:#ff5252">0</span><span class="stat-label">Strikes</span></div>
