@@ -31,9 +31,10 @@
 
         .header-line { width: 100%; height: 2px; background: #1a73e8; margin-bottom: 20px; opacity: 0.5; width: 80%; }
 
-        .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 20px; }
+        .stats { display: flex; justify-content: center; gap: 30px; margin-bottom: 15px; }
         .stat-group { display: flex; flex-direction: column; align-items: center; }
-        .stat-val { font-size: 5rem; font-weight: 800; line-height: 1; }
+        /* Reduced from 5rem to 2.5rem */
+        .stat-val { font-size: 2.5rem; font-weight: 800; line-height: 1; }
         .stat-label { font-size: 0.8rem; text-transform: uppercase; color: var(--text-sub); letter-spacing: 1px; }
 
         .game-panel {
@@ -44,7 +45,7 @@
             flex-direction: column;
             align-items: center;
             width: 100%;
-            min-height: 580px; 
+            min-height: 540px; 
         }
 
         .mode-tag {
@@ -71,10 +72,11 @@
             cursor: pointer;
         }
 
-        .progress-container { width: 100%; height: 12px; background-color: var(--progress-bg); border-radius: 10px; margin-bottom: 10px; overflow: hidden; }
+        /* Reduced margins to tighten spacing */
+        .progress-container { width: 100%; height: 12px; background-color: var(--progress-bg); border-radius: 10px; margin-bottom: 5px; overflow: hidden; }
         .progress-bar { height: 100%; width: 0%; background-color: var(--progress-fill); transition: width 0.3s; }
 
-        #timer-text { font-size: 1.2rem; font-weight: 800; color: var(--timer-color); margin-bottom: 10px; height: 1.5rem; }
+        #timer-text { font-size: 1.2rem; font-weight: 800; color: var(--timer-color); margin-bottom: 5px; height: 1.5rem; }
 
         #play-btn, #replay-btn, #begin-round-btn {
             background: #2ecc71; color: white; border: none; padding: 12px 30px; border-radius: 40px;
@@ -84,7 +86,7 @@
         #replay-btn { background: #1a73e8; display: none; box-shadow: 0 4px 15px rgba(26, 115, 232, 0.3); }
         #begin-round-btn { background: #e67e22; display: none; box-shadow: 0 4px 15px rgba(230, 126, 34, 0.3); }
 
-        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 10px; width: 100%; }
+        .grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; margin-top: 5px; width: 100%; }
 
         .chord-btn {
             width: calc(25% - 10px); aspect-ratio: 1 / 1; border-radius: 15px; border: none;
@@ -120,14 +122,14 @@
 
         @media (max-width: 400px) {
             .chord-btn { font-size: 2.2rem; }
-            .game-panel { min-height: 520px; }
+            .game-panel { min-height: 500px; }
         }
     </style>
 </head>
 <body>
 <div class="container">
     <h1>CHROMACHORDS</h1>
-    
+    <div class="header-line"></div>
     
     <div class="stats">
         <div class="stat-group"><span id="streak" class="stat-val">0</span><span class="stat-label">Streak</span></div>
@@ -242,7 +244,7 @@
         streak = 0;
         
         document.getElementById('play-btn').style.display = "none";
-        document.getElementById('replay-btn').style.display = "none"; // Ensure Replay is hidden
+        document.getElementById('replay-btn').style.display = "none"; 
         document.getElementById('begin-round-btn').style.display = "block";
         document.getElementById('selector-box').style.display = "none";
         
